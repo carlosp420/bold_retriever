@@ -1,7 +1,7 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$]{$documentclass$}
 \usepackage{setspace}
 %\usepackage[]{lineno}
-\def\linenumberfont{\normalfont\small\sffamily}
+%\def\linenumberfont{\normalfont\small\sffamily}
 %\doublespacing
 \onehalfspacing
 \usepackage[T1]{fontenc}
