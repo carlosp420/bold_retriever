@@ -1,8 +1,9 @@
 \documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$]{$documentclass$}
 \usepackage{setspace}
-\usepackage[]{lineno}
+%\usepackage[]{lineno}
 \def\linenumberfont{\normalfont\small\sffamily}
-\doublespacing
+%\doublespacing
+\onehalfspacing
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
