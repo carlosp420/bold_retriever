@@ -2,6 +2,7 @@
 \usepackage{setspace}
 %\usepackage[]{lineno}
 %\def\linenumberfont{\normalfont\small\sffamily}
+%\linenumbers
 %\doublespacing
 \onehalfspacing
 \usepackage[T1]{fontenc}
@@ -132,7 +133,6 @@ $for(header-includes)$
 $header-includes$
 $endfor$
 
-\linenumbers
 
 $if(title)$
 \title{$title$}
