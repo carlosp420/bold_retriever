@@ -4,4 +4,4 @@
 
 # Run this way
 
-    `` python bold_retriever.py Ion_Tip_AA.fasta ``
+    python bold_retriever.py Ion_Tip_AA.fasta
