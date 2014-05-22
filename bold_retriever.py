@@ -78,7 +78,8 @@ if len(sys.argv) < 2:
 f = sys.argv[1]
 
 out = "bold_id,seq_id,similarity,taxon,class,order,family\n"
-myfile = codecs.open("output.csv", "w", "utf-8")
+output_filename = f.strip() + "_output.csv"
+myfile = codecs.open(output_filename, "w", "utf-8")
 myfile.write(out)
 myfile.close()
 for seq_record in SeqIO.parse(f, "fasta"):
@@ -92,7 +93,7 @@ for seq_record in SeqIO.parse(f, "fasta"):
             out += obj['class'] + "," + obj['order'] + "," + obj['family'] + "\n"
         else:
             out += "None,None,None\n"
-    myfile = codecs.open("output.csv", "a", "utf-8")
+    myfile = codecs.open(output_filename, "a", "utf-8")
     myfile.write(out)
     myfile.close()
 
