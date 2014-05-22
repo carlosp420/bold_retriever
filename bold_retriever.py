@@ -49,7 +49,10 @@ def request_classification(obj):
         tax_id = tax_id[0]
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonSearch/"
     print "i am sending this %s" % tax_id
-    payload = { 'taxName': tax_id }
+    payload = {
+            'taxName': tax_id,
+            'fuzzy': 'true',
+            }
     r = requests.get(url, params=payload)
     if r.text != "":
         for k, v in json.loads(r.text).items():
