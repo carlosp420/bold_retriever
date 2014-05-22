@@ -13,9 +13,8 @@ def request_id(seq_object, id):
     # input a sequence object
     # sends sequence to BOLD REST API for Identification Engine db=COX1_L640bp
     # output a dictionary with the info
-    out = {}
-    out['seq'] = str(seq_object)
-    out['id'] = str(id)
+    all_ids = []
+    taxon_list = []
     url = "http://boldsystems.org/index.php/Ids_xml"
     payload = { 'db': 'COX1_L640bp', 'sequence': str(seq_object) }
     r = requests.get(url, params=payload)
@@ -23,6 +22,9 @@ def request_id(seq_object, id):
         root = ET.fromstring(r.text)
         #print r.text
         for match in root.findall('match'):
+            out = {}
+            out['seq'] = str(seq_object)
+            out['id'] = str(id)
             similarity = match.find('similarity').text
             out['similarity'] = similarity
             tax_id = match.find('taxonomicidentification').text
@@ -30,10 +32,14 @@ def request_id(seq_object, id):
 
             myid = match.find('ID').text
             out['bold_id'] = myid
-            break
+            if not out['tax_id'] in taxon_list:
+                taxon_list.append(out['tax_id'])
+                all_ids.append(out)
     else:
         return None
-    return out
+    for i in all_ids:
+        print i['tax_id'], i['similarity']
+    return all_ids
 
 
 def request_classification(obj):
@@ -84,15 +90,30 @@ myfile.write(out)
 myfile.close()
 for seq_record in SeqIO.parse(f, "fasta"):
     out = ""
-    obj = request_id(seq_record.seq, seq_record.id)
-    if 'tax_id' in obj:
-        obj = request_classification(obj)
-        out += obj['bold_id'] + ","
-        out += obj['id'] + "," + obj['similarity'] + "," + obj['tax_id'] + ","
-        if obj['classification'] == "true":
-            out += obj['class'] + "," + obj['order'] + "," + obj['family'] + "\n"
-        else:
-            out += "None,None,None\n"
+    all_ids = request_id(seq_record.seq, seq_record.id)
+    for obj in all_ids:
+        if 'tax_id' in obj:
+            obj = request_classification(obj)
+            out += obj['bold_id'] + ","
+            out += obj['id'] + "," + obj['similarity'] + "," + obj['tax_id'] + ","
+            if obj['classification'] == "true":
+                if 'class' in obj:
+                    out += obj['class'] + ","
+                else:
+                    out += "None,"
+
+                if 'order' in obj:
+                    out += obj['order'] + ","
+                else:
+                    out += "None,"
+
+                if 'family' in obj:
+                    out += obj['family'] + ","
+                else:
+                    out += "None,"
+                out += "\n"
+            else:
+                out += "None,None,None\n"
     myfile = codecs.open(output_filename, "a", "utf-8")
     myfile.write(out)
     myfile.close()
