@@ -1,8 +1,3 @@
-# Generate document by using Makefiles
-* ``make pdf``
-* ``make docx``
-
-
 # Run this way
 
 1. clone repository
@@ -17,13 +12,13 @@
 ```bash
     cd bold_retriever
     module load biopython-env
-    pip install -r requeriments.txt
+    pip install -r requirements.txt
 ```
 
 3. run software
 
 ```bash
-    python bold_retriever.py ZA2013-0565.fasta
+    python bold_retriever.py -f ZA2013-0565.fasta
 ```
 
 4. output
