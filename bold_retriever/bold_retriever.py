@@ -1,8 +1,11 @@
-import xml.etree.ElementTree as ET
-import requests
-from Bio import SeqIO
-import json
+import argparse
+from argparse import RawTextHelpFormatter
 import codecs
+import json
+import xml.etree.ElementTree as ET
+
+from Bio import SeqIO
+import requests
 
 
 def request_id(seq_object, id):
@@ -58,11 +61,10 @@ def taxon_search(obj):
     return None
 
 
-def taxon_data(taxID):
+def taxon_data(obj):
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
-    payload = { 'taxId': taxID, 'dataTypes': 'basic', 'includeTree': 'true' }
+    payload = { 'taxId': obj['taxID'], 'dataTypes': 'basic', 'includeTree': 'true' }
     req = requests.get(url, params=payload)
-    obj = {}
     if req.text != "":
         for key, val in json.loads(req.text).items():
             if val['tax_rank'] == 'class':
@@ -81,15 +83,18 @@ def taxon_data(taxID):
 
 
 def main():
-    """
-    if len(sys.argv) < 2:
-        print "Error, you need to enter a FASTA file name as parameter"
-        print "\n\tpython bold_retriever.py ZA2013.fasta"
-        sys.exit()
-    
-    f = sys.argv[1]
-    """
-    
+    description = "send seqs to BOLD Systems API and retrieve results"
+    parser = argparse.ArgumentParser(
+                description=description,
+                formatter_class=RawTextHelpFormatter,
+    )
+    parser.add_argument('-f', '--file', action='store', help='Fasta filename',
+            required=True, dest='fasta_file')
+
+    args = parser.parse_args()
+
+    f = args.fasta_file
+
     out = "bold_id,seq_id,similarity,taxon,class,order,family\n"
     output_filename = f.strip() + "_output.csv"
     myfile = codecs.open(output_filename, "w", "utf-8")
@@ -100,9 +105,11 @@ def main():
         all_ids = request_id(seq_record.seq, seq_record.id)
         for obj in all_ids:
             if 'tax_id' in obj:
-                obj = request_classification(obj)
+                obj['taxID'] = taxon_search(obj)
+                obj = taxon_data(obj)
                 out += obj['bold_id'] + ","
-                out += obj['id'] + "," + obj['similarity'] + "," + obj['tax_id'] + ","
+                out += obj['id'] + "," + obj['similarity'] + "," 
+                out += obj['tax_id'] + ","
                 if obj['classification'] == "true":
                     if 'class' in obj:
                         out += obj['class'] + ","

@@ -26,12 +26,13 @@ class TestBoldRetriever(unittest.TestCase):
     def test_taxon_data(self):
         taxID = '297370'
         obj = {}
+        obj['taxID'] = '297370'
         obj['class'] = 'Insecta'
         obj['order'] = 'Diptera'
         obj['family'] = 'Limoniidae'
         obj['classification']  = 'true'
-        results = br.taxon_data(taxID)
-        self.assertEqual(results, obj)
+        results = br.taxon_data(obj)
+        self.assertEqual(results['family'], obj['family'])
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity = 2)
