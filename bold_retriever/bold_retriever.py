@@ -38,36 +38,41 @@ def request_id(seq_object, id):
     return all_ids
 
 
-def request_classification(obj):
+def taxon_search(obj):
     #obj['tax_id'] = "Morpho helenor"
     tax_id = obj['tax_id'].split(" ")
     if len(tax_id) > 1:
         tax_id = tax_id[0]
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonSearch/"
-    print "i am sending this %s" % tax_id
+    print "I am sending this %s" % tax_id
     payload = {
             'taxName': tax_id,
-            'fuzzy': 'true',
+            'fuzzy': 'false',
             }
     r = requests.get(url, params=payload)
     if r.text != "":
         for k, v in json.loads(r.text).items():
-            taxID = k
-            break
-        print taxID
-        url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
-        payload = { 'taxId': taxID, 'dataTypes': 'basic', 'includeTree': 'true' }
-        req = requests.get(url, params=payload)
-        if req.text != "":
-            for key, val in json.loads(req.text).items():
-                if val['tax_rank'] == 'class':
-                    obj['class'] = val['taxon']
-                if val['tax_rank'] == 'order':
-                    obj['order'] = val['taxon']
-                if val['tax_rank'] == 'family':
-                    obj['family'] = val['taxon']
-                obj['classification'] = "true"
-            print obj
+            if v['tax_division'] == 'Animals':
+                # this is the taxID
+                return k
+    return None
+
+
+def taxon_data(taxID):
+    url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
+    payload = { 'taxId': taxID, 'dataTypes': 'basic', 'includeTree': 'true' }
+    req = requests.get(url, params=payload)
+    obj = {}
+    if req.text != "":
+        for key, val in json.loads(req.text).items():
+            if val['tax_rank'] == 'class':
+                obj['class'] = val['taxon']
+            if val['tax_rank'] == 'order':
+                obj['order'] = val['taxon']
+            if val['tax_rank'] == 'family':
+                obj['family'] = val['taxon']
+            obj['classification'] = "true"
+        print obj
         return obj
     else:
         obj['classification'] = "false"
