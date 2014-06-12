@@ -1,8 +1,4 @@
-#!/usr/bin/env python
-
-
 import xml.etree.ElementTree as ET
-import sys
 import requests
 from Bio import SeqIO
 import json
@@ -79,45 +75,51 @@ def request_classification(obj):
 
 
 
-if len(sys.argv) < 2:
-    print "Error, you need to enter a FASTA file name as parameter"
-    print "\n\tpython bold_retriever.py ZA2013.fasta"
-    sys.exit()
-
-f = sys.argv[1]
-
-out = "bold_id,seq_id,similarity,taxon,class,order,family\n"
-output_filename = f.strip() + "_output.csv"
-myfile = codecs.open(output_filename, "w", "utf-8")
-myfile.write(out)
-myfile.close()
-for seq_record in SeqIO.parse(f, "fasta"):
-    out = ""
-    all_ids = request_id(seq_record.seq, seq_record.id)
-    for obj in all_ids:
-        if 'tax_id' in obj:
-            obj = request_classification(obj)
-            out += obj['bold_id'] + ","
-            out += obj['id'] + "," + obj['similarity'] + "," + obj['tax_id'] + ","
-            if obj['classification'] == "true":
-                if 'class' in obj:
-                    out += obj['class'] + ","
-                else:
-                    out += "None,"
-
-                if 'order' in obj:
-                    out += obj['order'] + ","
-                else:
-                    out += "None,"
-
-                if 'family' in obj:
-                    out += obj['family'] + ","
-                else:
-                    out += "None,"
-                out += "\n"
-            else:
-                out += "None,None,None\n"
-    myfile = codecs.open(output_filename, "a", "utf-8")
+def main():
+    """
+    if len(sys.argv) < 2:
+        print "Error, you need to enter a FASTA file name as parameter"
+        print "\n\tpython bold_retriever.py ZA2013.fasta"
+        sys.exit()
+    
+    f = sys.argv[1]
+    """
+    
+    out = "bold_id,seq_id,similarity,taxon,class,order,family\n"
+    output_filename = f.strip() + "_output.csv"
+    myfile = codecs.open(output_filename, "w", "utf-8")
     myfile.write(out)
     myfile.close()
+    for seq_record in SeqIO.parse(f, "fasta"):
+        out = ""
+        all_ids = request_id(seq_record.seq, seq_record.id)
+        for obj in all_ids:
+            if 'tax_id' in obj:
+                obj = request_classification(obj)
+                out += obj['bold_id'] + ","
+                out += obj['id'] + "," + obj['similarity'] + "," + obj['tax_id'] + ","
+                if obj['classification'] == "true":
+                    if 'class' in obj:
+                        out += obj['class'] + ","
+                    else:
+                        out += "None,"
+    
+                    if 'order' in obj:
+                        out += obj['order'] + ","
+                    else:
+                        out += "None,"
+    
+                    if 'family' in obj:
+                        out += obj['family'] + ","
+                    else:
+                        out += "None,"
+                    out += "\n"
+                else:
+                    out += "None,None,None\n"
+        myfile = codecs.open(output_filename, "a", "utf-8")
+        myfile.write(out)
+        myfile.close()
+    
 
+if __name__ == "__main__":
+    main()
