@@ -53,17 +53,27 @@ def taxon_search(obj):
             'fuzzy': 'false',
             }
     r = requests.get(url, params=payload)
+    found_division = False
     if r.text != "":
         for k, v in json.loads(r.text).items():
             if v['tax_division'] == 'Animals':
                 # this is the taxID
-                return k
+                found_division = True
+                return {'division': 'animal', 'taxID': k}
+
+        if not found_division:
+            for k, v in json.loads(r.text).items():
+                if v['tax_division'] != 'Animals':
+                    # this is the taxID
+                    found_division = True
+                    return {'division': 'not animal', 'taxID': k}
     return None
 
 
 def taxon_data(obj):
+    this_tax_id = obj['taxID']
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
-    payload = { 'taxId': obj['taxID'], 'dataTypes': 'basic', 'includeTree': 'true' }
+    payload = { 'taxId': this_tax_id, 'dataTypes': 'basic', 'includeTree': 'true' }
     req = requests.get(url, params=payload)
     if req.text != "":
         for key, val in json.loads(req.text).items():
@@ -95,7 +105,7 @@ def main():
 
     f = args.fasta_file
 
-    out = "bold_id,seq_id,similarity,taxon,class,order,family\n"
+    out = "bold_id,seq_id,similarity,division,taxon,class,order,family\n"
     output_filename = f.strip() + "_output.csv"
     myfile = codecs.open(output_filename, "w", "utf-8")
     myfile.write(out)
@@ -105,10 +115,14 @@ def main():
         all_ids = request_id(seq_record.seq, seq_record.id)
         for obj in all_ids:
             if 'tax_id' in obj:
-                obj['taxID'] = taxon_search(obj)
+                r = taxon_search(obj)
+                obj['taxID'] = r['taxID']
+                obj['division'] = r['division']
+                print "== obj" , obj
                 obj = taxon_data(obj)
                 out += obj['bold_id'] + ","
                 out += obj['id'] + "," + obj['similarity'] + "," 
+                out += obj['division'] + "," 
                 out += obj['tax_id'] + ","
                 if obj['classification'] == "true":
                     if 'class' in obj:

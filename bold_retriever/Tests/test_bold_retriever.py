@@ -17,22 +17,38 @@ class TestBoldRetriever(unittest.TestCase):
         results = results[0]['tax_id']
         self.assertEqual(results, 'Aedes nigripes')
 
-    def test_taxon_search(self):
+    def test_taxon_search1(self):
         obj = {}
         obj['tax_id'] = "Ormosia"
         results = br.taxon_search(obj)
-        self.assertEqual(results, '297370')
+        self.assertEqual(results['division'], 'animal')
+        self.assertEqual(results['taxID'], '297370')
+
+    def test_taxon_search2(self):
+        # when it is not an animal
+        obj = {}
+        obj['tax_id'] = "Pythium"
+        results = br.taxon_search(obj)
+        self.assertEqual(results['division'], 'not animal')
+        self.assertEqual(results['taxID'], '23732')
 
     def test_taxon_data(self):
         taxID = '297370'
-        obj = {}
-        obj['taxID'] = '297370'
+        obj = {'division': 'animal', 'taxID': taxID}
         obj['class'] = 'Insecta'
         obj['order'] = 'Diptera'
         obj['family'] = 'Limoniidae'
         obj['classification']  = 'true'
         results = br.taxon_data(obj)
+        self.assertEqual(results, obj)
+
+        taxID = '23732'
+        obj = {'division': 'not animal', 'taxID': taxID}
+        results = br.taxon_data(obj)
+        print "\nthis results", results
+        print "\nthis obj", obj
         self.assertEqual(results['family'], obj['family'])
+
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity = 2)
