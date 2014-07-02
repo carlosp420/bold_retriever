@@ -29,6 +29,12 @@ def request_id(seq_object, id):
             tax_id = match.find('taxonomicidentification').text
             out['tax_id'] = tax_id
 
+            if match.find('specimen/collectionlocation/country').text:
+                ctry = match.find('specimen/collectionlocation/country').text
+                out['collection_country'] = ctry
+            else:
+                out['collection_country'] = "None"
+
             myid = match.find('ID').text
             out['bold_id'] = myid
             if not out['tax_id'] in taxon_list:
@@ -105,7 +111,8 @@ def main():
 
     f = args.fasta_file
 
-    out = "bold_id,seq_id,similarity,division,taxon,class,order,family\n"
+    out = "bold_id,seq_id,similarity,collection_country,division,taxon,"
+    out += "class,order,family\n"
     output_filename = f.strip() + "_output.csv"
     myfile = codecs.open(output_filename, "w", "utf-8")
     myfile.write(out)
@@ -122,6 +129,7 @@ def main():
                 obj = taxon_data(obj)
                 out += obj['bold_id'] + ","
                 out += obj['id'] + "," + obj['similarity'] + "," 
+                out += obj['collection_country'] + "," 
                 out += obj['division'] + "," 
                 out += obj['tax_id'] + ","
                 if obj['classification'] == "true":

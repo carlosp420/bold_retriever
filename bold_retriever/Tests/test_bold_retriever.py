@@ -17,6 +17,7 @@ class TestBoldRetriever(unittest.TestCase):
         results = results[0]
         expected = {
                 'bold_id': 'SAMOS029-09',
+                'collection_country': 'Canada',
                 'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
                 'similarity': '1',
                 'tax_id': 'Diptera',
