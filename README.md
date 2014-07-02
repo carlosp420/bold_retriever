@@ -24,19 +24,16 @@
 4. output
 
 ```
-bold_id,seq_id,similarity,division,taxon,class,order,family
-FIDIP558-11,TE-14-27_FHYP_av,0.9884,animal,Ornithomyia avicularia,Insecta,Diptera,Hippoboscidae,
-DIPFI041-12,TE-14-27_FHYP_av,0.9254,animal,Ornithomya,Insecta,Diptera,Hippoboscidae,
-GBDP6413-09,TE-14-27_FHYP_av,0.9242,animal,Ornithomya anchineura,Insecta,Diptera,Hippoboscidae,
-GBDP2916-07,TE-14-27_FHYP_av,0.922,animal,Stenepteryx hirundinis,Insecta,Diptera,Hippoboscidae,
-GBDP2919-07,TE-14-27_FHYP_av,0.9149,animal,Ornithomya biloba,Insecta,Diptera,Hippoboscidae,
-GBDP2908-07,TE-14-27_FHYP_av,0.9078,animal,Ornithoctona sp. P-20,Insecta,Diptera,Hippoboscidae,
-GBDP2918-07,TE-14-27_FHYP_av,0.9076,animal,Ornithomya chloropus,Insecta,Diptera,Hippoboscidae,
-GBDP2935-07,TE-14-27_FHYP_av,0.8936,animal,Crataerina pallida,Insecta,Diptera,Hippoboscidae,
-GBMIN26225-13,TE-14-27_FHYP_av,0.8889,animal,Lucilia sericata,Insecta,Diptera,Calliphoridae,
-FIDIP602-12,TE-14-27_FHYP_av,0.8856,animal,Azelia cilipes,Insecta,Diptera,Muscidae,
-GBDP5820-09,TE-14-27_FHYP_av,0.8833,animal,Coenosia tigrina,Insecta,Diptera,Muscidae,
-GBMIN26204-13,TE-14-27_FHYP_av,0.883,animal,Lucilia cuprina,Insecta,Diptera,Calliphoridae,
-TTMDI037-08,TE-14-27_FHYP_av,0.8823,animal,Muscidae,Insecta,Diptera,Muscidae,
-GBMIN18768-13,TE-14-27_FHYP_av,0.8823,animal,Ornithoctona erythrocephala,Insecta,Diptera,Hippoboscidae,
+bold_id        seq_id            similarity  collection_country  division  taxon                        class    order    family
+FIDIP558-11    TE-14-27_FHYP_av  0.9884      Finland             animal    Diptera                      Insecta  Diptera  None
+GBDP6413-09    TE-14-27_FHYP_av  0.9242      None                animal    Ornithomya anchineura        Insecta  Diptera  Hippoboscidae
+GBDP2916-07    TE-14-27_FHYP_av  0.922       None                animal    Stenepteryx hirundinis       Insecta  Diptera  Hippoboscidae
+GBDP2919-07    TE-14-27_FHYP_av  0.9149      None                animal    Ornithomya biloba            Insecta  Diptera  Hippoboscidae
+GBDP2908-07    TE-14-27_FHYP_av  0.9078      None                animal    Ornithoctona sp. P-20        Insecta  Diptera  Hippoboscidae
+GBDP2918-07    TE-14-27_FHYP_av  0.9076      None                animal    Ornithomya chloropus         Insecta  Diptera  Hippoboscidae
+GBDP2935-07    TE-14-27_FHYP_av  0.8936      None                animal    Crataerina pallida           Insecta  Diptera  Hippoboscidae
+GBMIN26225-13  TE-14-27_FHYP_av  0.8889      None                animal    Lucilia sericata             Insecta  Diptera  Calliphoridae
+GBDP5820-09    TE-14-27_FHYP_av  0.8833      None                animal    Coenosia tigrina             Insecta  Diptera  Muscidae
+GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
+GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
 ```
