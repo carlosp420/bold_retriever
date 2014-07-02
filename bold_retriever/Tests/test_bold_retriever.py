@@ -14,8 +14,15 @@ class TestBoldRetriever(unittest.TestCase):
             seq = str(seq_record.seq)
 
         results = br.request_id(seq, seq_record.id)
-        results = results[0]['tax_id']
-        self.assertEqual(results, 'Aedes nigripes')
+        results = results[0]
+        expected = {
+                'bold_id': 'SAMOS029-09',
+                'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
+                'similarity': '1',
+                'tax_id': 'Diptera',
+                'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
+                }
+        self.assertEqual(results, expected)
 
     def test_taxon_search1(self):
         obj = {}
