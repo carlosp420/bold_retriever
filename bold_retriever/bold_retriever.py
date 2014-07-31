@@ -62,10 +62,13 @@ def taxon_search(obj):
     found_division = False
     if r.text != "":
         for k, v in json.loads(r.text).items():
-            if v['tax_division'] == 'Animals':
-                # this is the taxID
-                found_division = True
-                return {'division': 'animal', 'taxID': k}
+            try:
+                if v['tax_division'] == 'Animals':
+                    # this is the taxID
+                    found_division = True
+                    return {'division': 'animal', 'taxID': k}
+            except:
+                print "\n>> Error: " + str(r.text)
 
         if not found_division:
             for k, v in json.loads(r.text).items():
