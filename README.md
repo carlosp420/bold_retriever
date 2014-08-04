@@ -37,3 +37,7 @@ GBDP5820-09    TE-14-27_FHYP_av  0.8833      None                animal    Coeno
 GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
 GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
 ```
+
+## Changes
+
+* v0.0.5: Catch exception when BOLD sends funny data such as `` {"481541":[]}``.

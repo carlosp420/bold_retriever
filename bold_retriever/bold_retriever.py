@@ -72,10 +72,13 @@ def taxon_search(obj):
 
         if not found_division:
             for k, v in json.loads(r.text).items():
-                if v['tax_division'] != 'Animals':
-                    # this is the taxID
-                    found_division = True
-                    return {'division': 'not animal', 'taxID': k}
+                try:
+                    if v['tax_division'] != 'Animals':
+                        # this is the taxID
+                        found_division = True
+                        return {'division': 'not animal', 'taxID': k}
+                except:
+                    print "\n>> Error got funny reply from BOLD: " + str(r.text)
     return None
 
 
@@ -126,6 +129,9 @@ def main():
         for obj in all_ids:
             if 'tax_id' in obj:
                 r = taxon_search(obj)
+
+                if r is None:
+                    continue
                 obj['taxID'] = r['taxID']
                 obj['division'] = r['division']
                 print "== obj" , obj
