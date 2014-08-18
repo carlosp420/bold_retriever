@@ -15,12 +15,12 @@ def request_id(seq_object, id):
     all_ids = []
     taxon_list = []
     url = "http://boldsystems.org/index.php/Ids_xml"
-    payload = { 'db': 'COX1_L640bp', 'sequence': str(seq_object) }
+    payload = {'db': 'COX1_L640bp', 'sequence': str(seq_object)}
     r = requests.get(url, params=payload)
-    if r.text != None:
+    if r.text is not None:
         try:
             root = ET.fromstring(r.text)
-            #print r.text
+            # print r.text
             for match in root.findall('match'):
                 out = {}
                 out['seq'] = str(seq_object)
@@ -53,16 +53,16 @@ def request_id(seq_object, id):
 
 
 def taxon_search(obj):
-    #obj['tax_id'] = "Morpho helenor"
+    # obj['tax_id'] = "Morpho helenor"
     tax_id = obj['tax_id'].split(" ")
     if len(tax_id) > 1:
         tax_id = tax_id[0]
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonSearch/"
     print "I am sending this %s" % tax_id
     payload = {
-            'taxName': tax_id,
-            'fuzzy': 'false',
-            }
+        'taxName': tax_id,
+        'fuzzy': 'false',
+    }
     r = requests.get(url, params=payload)
     found_division = False
     if r.text != "":
@@ -90,7 +90,7 @@ def taxon_search(obj):
 def taxon_data(obj):
     this_tax_id = obj['taxID']
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
-    payload = { 'taxId': this_tax_id, 'dataTypes': 'basic', 'includeTree': 'true' }
+    payload = {'taxId': this_tax_id, 'dataTypes': 'basic', 'includeTree': 'true'}
     req = requests.get(url, params=payload)
     if req.text != "":
         for key, val in json.loads(req.text).items():
@@ -108,15 +108,15 @@ def taxon_data(obj):
         return obj
 
 
-
 def main():
     description = "send seqs to BOLD Systems API and retrieve results"
     parser = argparse.ArgumentParser(
-                description=description,
-                formatter_class=RawTextHelpFormatter,
+        description=description,
+        formatter_class=RawTextHelpFormatter,
     )
     parser.add_argument('-f', '--file', action='store', help='Fasta filename',
-            required=True, dest='fasta_file')
+                        required=True, dest='fasta_file',
+                        )
 
     args = parser.parse_args()
 
@@ -139,24 +139,24 @@ def main():
                     continue
                 obj['taxID'] = r['taxID']
                 obj['division'] = r['division']
-                print "== obj" , obj
+                print "== obj", obj
                 obj = taxon_data(obj)
                 out += obj['bold_id'] + ","
-                out += obj['id'] + "," + obj['similarity'] + "," 
-                out += obj['collection_country'] + "," 
-                out += obj['division'] + "," 
+                out += obj['id'] + "," + obj['similarity'] + ","
+                out += obj['collection_country'] + ","
+                out += obj['division'] + ","
                 out += obj['tax_id'] + ","
                 if obj['classification'] == "true":
                     if 'class' in obj:
                         out += obj['class'] + ","
                     else:
                         out += "None,"
-    
+
                     if 'order' in obj:
                         out += obj['order'] + ","
                     else:
                         out += "None,"
-    
+
                     if 'family' in obj:
                         out += obj['family'] + ","
                     else:
@@ -167,7 +167,7 @@ def main():
         myfile = codecs.open(output_filename, "a", "utf-8")
         myfile.write(out)
         myfile.close()
-    
+
 
 if __name__ == "__main__":
     main()
