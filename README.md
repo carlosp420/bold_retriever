@@ -1,28 +1,21 @@
 # Run this way
 
 1. clone repository
-
 ```bash
     cd $USERAPPL
     git clone https://github.com/carlosp420/bold_retriever.git
 ```
-
 2. install dependencies
-
 ```bash
     cd bold_retriever
     module load biopython-env
     pip install -r requirements.txt
 ```
-
 3. run software
-
 ```bash
     python bold_retriever.py -f ZA2013-0565.fasta
 ```
-
 4. output
-
 ```
 bold_id        seq_id            similarity  collection_country  division  taxon                        class    order    family
 FIDIP558-11    TE-14-27_FHYP_av  0.9884      Finland             animal    Diptera                      Insecta  Diptera  None
@@ -40,4 +33,5 @@ GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornit
 
 ## Changes
 
+* v0.0.6: Catching exception for malformed XML from BOLD
 * v0.0.5: Catch exception when BOLD sends funny data such as `` {"481541":[]}``.
