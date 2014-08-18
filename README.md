@@ -1,21 +1,21 @@
 # Run this way
 
-1. clone repository
+* clone repository
 ```bash
     cd $USERAPPL
     git clone https://github.com/carlosp420/bold_retriever.git
 ```
-2. install dependencies
+* install dependencies
 ```bash
     cd bold_retriever
     module load biopython-env
     pip install -r requirements.txt
 ```
-3. run software
+* run software
 ```bash
     python bold_retriever.py -f ZA2013-0565.fasta
 ```
-4. output
+* output
 ```
 bold_id        seq_id            similarity  collection_country  division  taxon                        class    order    family
 FIDIP558-11    TE-14-27_FHYP_av  0.9884      Finland             animal    Diptera                      Insecta  Diptera  None
