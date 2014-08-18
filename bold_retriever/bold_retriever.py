@@ -18,28 +18,33 @@ def request_id(seq_object, id):
     payload = { 'db': 'COX1_L640bp', 'sequence': str(seq_object) }
     r = requests.get(url, params=payload)
     if r.text != None:
-        root = ET.fromstring(r.text)
-        #print r.text
-        for match in root.findall('match'):
-            out = {}
-            out['seq'] = str(seq_object)
-            out['id'] = str(id)
-            similarity = match.find('similarity').text
-            out['similarity'] = similarity
-            tax_id = match.find('taxonomicidentification').text
-            out['tax_id'] = tax_id
+        try:
+            root = ET.fromstring(r.text)
+            #print r.text
+            for match in root.findall('match'):
+                out = {}
+                out['seq'] = str(seq_object)
+                out['id'] = str(id)
+                similarity = match.find('similarity').text
+                out['similarity'] = similarity
+                tax_id = match.find('taxonomicidentification').text
+                out['tax_id'] = tax_id
 
-            if match.find('specimen/collectionlocation/country').text:
-                ctry = match.find('specimen/collectionlocation/country').text
-                out['collection_country'] = ctry
-            else:
-                out['collection_country'] = "None"
+                if match.find('specimen/collectionlocation/country').text:
+                    ctry = match.find('specimen/collectionlocation/country').text
+                    out['collection_country'] = ctry
+                else:
+                    out['collection_country'] = "None"
 
-            myid = match.find('ID').text
-            out['bold_id'] = myid
-            if not out['tax_id'] in taxon_list:
-                taxon_list.append(out['tax_id'])
-                all_ids.append(out)
+                myid = match.find('ID').text
+                out['bold_id'] = myid
+                if not out['tax_id'] in taxon_list:
+                    taxon_list.append(out['tax_id'])
+                    all_ids.append(out)
+        except ET.ParseError as e:
+            print "\n>> Error got malformed XML from BOLD: " + e
+            return None
+
     else:
         return None
     for i in all_ids:
