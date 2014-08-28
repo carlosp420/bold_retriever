@@ -3,3 +3,4 @@ bold_retriever.egg-info
 build
 dist
 *csv
+.idea
