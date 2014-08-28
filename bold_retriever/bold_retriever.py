@@ -40,14 +40,14 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
         return all_ids, taxon_list
 
 
-def request_id(seq_object, id):
+def request_id(seq_object, id, db):
     # input a sequence object
     # sends sequence to BOLD REST API for Identification Engine db=COX1_L640bp
     # output a dictionary with the info
     all_ids = []
     taxon_list = []
     url = "http://boldsystems.org/index.php/Ids_xml"
-    payload = {'db': 'COX1_L640bp', 'sequence': str(seq_object)}
+    payload = {'db': db, 'sequence': str(seq_object)}
     r = requests.get(url, params=payload)
     if r.text is not None:
         all_ids, taxon_list = parse_bold_xml(r.text, seq_object, id, all_ids,
@@ -128,9 +128,21 @@ def main():
     parser.add_argument('-f', '--file', action='store', help='Fasta filename',
                         required=True, dest='fasta_file',
                         )
+    parser.add_argument('-db', '--database', action='store',
+                        help='Choose a BOLD database. Enter one option.',
+                        choices=[
+                            'COX1_SPECIES',
+                            'COX1',
+                            'COX1_SPECIES_PUBLIC',
+                            'COX1_L640bp',
+                        ],
+                        required=True,
+                        dest='db',
+                        )
 
     args = parser.parse_args()
 
+    db = args.db
     f = args.fasta_file
 
     out = "bold_id,seq_id,similarity,collection_country,division,taxon,"
@@ -141,7 +153,7 @@ def main():
     myfile.close()
     for seq_record in SeqIO.parse(f, "fasta"):
         out = ""
-        all_ids = request_id(seq_record.seq, seq_record.id)
+        all_ids = request_id(seq_record.seq, seq_record.id, db)
         for obj in all_ids:
             if 'tax_id' in obj:
                 r = taxon_search(obj)

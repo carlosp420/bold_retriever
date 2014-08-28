@@ -1,4 +1,3 @@
-import os
 import unittest
 import requests
 
@@ -9,12 +8,15 @@ from bold_retriever import bold_retriever as br
 
 class TestBoldRetriever(unittest.TestCase):
 
+    def setUp(self):
+        self.db = "COX1_L640bp"
+
     def test_request_id(self):
         filename = "ionx17.fas"
         for seq_record in SeqIO.parse(filename, "fasta"):
             seq = str(seq_record.seq)
 
-        results = br.request_id(seq, seq_record.id)
+        results = br.request_id(seq, seq_record.id, self.db)
         results = results[0]
         expected = {
                 'bold_id': 'SAMOS029-09',
@@ -132,7 +134,7 @@ class TestBoldRetriever(unittest.TestCase):
         obj['class'] = 'Insecta'
         obj['order'] = 'Diptera'
         obj['family'] = 'Limoniidae'
-        obj['classification']  = 'true'
+        obj['classification'] = 'true'
         results = br.taxon_data(obj)
         self.assertEqual(results, obj)
 
