@@ -3,7 +3,7 @@ from distutils.core import setup
 
 setup(
     name='bold_retriever',
-    version='0.0.6',
+    version='0.0.7',
     url="https://github.com/carlosp420/bold_retriever",
     author="Carlos Pena",
     author_email="mycalesis@gmail.com",
