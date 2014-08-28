@@ -17,8 +17,15 @@ This script accepts FASTA files containing COI sequences. It queries the BOLD
     pip install -r requirements.txt
 ```
 * run software
+You have to choose one of the [databases available from BOLD](http://www.boldsystems.org/index.php/resources/api?type=idengine)
+and enter it as argument:
+    * COX1_SPECIES
+    * COX1
+    * COX1_SPECIES_PUBLIC
+    * COX1_L640bp
+    
 ```bash
-    python bold_retriever.py -f ZA2013-0565.fasta
+    python bold_retriever.py -f ZA2013-0565.fasta -db COX1_SPECIES
 ```
 * output
 ```
