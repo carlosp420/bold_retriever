@@ -103,7 +103,13 @@ def taxon_data(obj):
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
     payload = {'taxId': this_tax_id, 'dataTypes': 'basic', 'includeTree': 'true'}
     req = requests.get(url, params=payload)
-    if req.text != "":
+
+    # this is a "list" then
+    if req.text == '[]':
+        obj = {'classification': 'false'}
+        return obj
+    # this is a string not a list
+    elif isinstance(req.text, basestring):
         for key, val in json.loads(req.text).items():
             if val['tax_rank'] == 'class':
                 obj['class'] = val['taxon']
@@ -113,9 +119,6 @@ def taxon_data(obj):
                 obj['family'] = val['taxon']
             obj['classification'] = "true"
         print obj
-        return obj
-    else:
-        obj['classification'] = "false"
         return obj
 
 
