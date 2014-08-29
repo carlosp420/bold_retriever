@@ -122,12 +122,11 @@ def taxon_data(obj):
         return obj
 
 
-def main():
+def create_parser():
     description = "send seqs to BOLD Systems API and retrieve results"
-    parser = argparse.ArgumentParser(
-        description=description,
-        formatter_class=RawTextHelpFormatter,
-    )
+    parser = argparse.ArgumentParser(description=description,
+                                     formatter_class=RawTextHelpFormatter,
+                                     )
     parser.add_argument('-f', '--file', action='store', help='Fasta filename',
                         required=True, dest='fasta_file',
                         )
@@ -138,11 +137,15 @@ def main():
                             'COX1',
                             'COX1_SPECIES_PUBLIC',
                             'COX1_L640bp',
-                        ],
+                            ],
                         required=True,
                         dest='db',
                         )
+    return parser
 
+
+def main():
+    parser = create_parser()
     args = parser.parse_args()
 
     db = args.db
