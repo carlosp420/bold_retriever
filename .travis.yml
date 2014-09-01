@@ -9,4 +9,6 @@ python:
 install: pip install -r requirements-test.txt
 
 # command to run tests, e.g. python setup.py test
-script: python runtests.py
+script: nosetests --with-coverage --cover-package=bold_retriever --cover-html
+
+after_success: coveralls
