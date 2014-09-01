@@ -2,14 +2,14 @@
 Bold Retriever
 ==============
 
-.. image:: https://badge.fury.io/py/bold_retriever_package.png
-    :target: http://badge.fury.io/py/bold_retriever_package
+.. image:: https://badge.fury.io/py/bold_retriever.png
+    :target: http://badge.fury.io/py/bold_retriever
 
-.. image:: https://travis-ci.org/carlosp420/bold_retriever_package.png?branch=master
-        :target: https://travis-ci.org/carlosp420/bold_retriever_package
+.. image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
+        :target: https://travis-ci.org/carlosp420/bold_retriever
 
-.. image:: https://pypip.in/d/bold_retriever_package/badge.png
-        :target: https://pypi.python.org/pypi/bold_retriever_package
+.. image:: https://pypip.in/d/bold_retriever/badge.png
+        :target: https://pypi.python.org/pypi/bold_retriever
 
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
@@ -30,6 +30,7 @@ Run this way
     pip install -r requirements.txt
 
 * run software
+
 You have to choose one of the databases available from BOLD
 http://www.boldsystems.org/index.php/resources/api?type=idengine
 and enter it as argument:
@@ -58,10 +59,6 @@ For example::
     GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
     GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
 
-Changes
--------
+See additional usage info in :ref:`usage-label`.
 
-* v0.1.0: You can specify which BOLD datase should be used for BLAST of FASTA sequences.
-* v0.0.7: Catching exception for NULL, list and text returned instead  of XML from BOLD.
-* v0.0.6: Catching exception for malformed XML from BOLD.
-* v0.0.5: Catch exception when BOLD sends funny data such as ``{"481541":[]}``.
+.. include:: ../HISTORY.rst

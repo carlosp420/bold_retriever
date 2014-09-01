@@ -1,0 +1,9 @@
+.. :changelog:
+
+History
+-------
+
+* v0.1.0: You can specify which BOLD datase should be used for BLAST of FASTA sequences.
+* v0.0.7: Catching exception for NULL, list and text returned instead  of XML from BOLD.
+* v0.0.6: Catching exception for malformed XML from BOLD.
+* v0.0.5: Catch exception when BOLD sends funny data such as ``{"481541":[]}``.
