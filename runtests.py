@@ -1,4 +1,6 @@
 import os
+import subprocess
+import sys
 
 
 def run_tests():
@@ -10,7 +12,11 @@ def run_tests():
     for name in names:
         if name[:5] == "test_" and name[-3:] == ".py":
             print(name)
-            os.system("python " + name)
+            cmd = "python " + name
+            try:
+                subprocess.check_call(cmd, shell=True)
+            except subprocess.CalledProcessError:
+                sys.exit(str(subprocess.CalledProcessError))
 
 
 if __name__ == '__main__':
