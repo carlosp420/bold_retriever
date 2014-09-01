@@ -2,13 +2,13 @@
 Bold Retriever
 ==============
 
-.. image:: https://badge.fury.io/py/bold_retriever.png
+.. image:: https://badge.fury.io/py/bold_retriever.svg
     :target: http://badge.fury.io/py/bold_retriever
 
 .. image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
         :target: https://travis-ci.org/carlosp420/bold_retriever
 
-.. image:: https://pypip.in/d/bold_retriever/badge.png
+.. image:: https://pypip.in/download/bold_retriever/badge.svg
         :target: https://pypi.python.org/pypi/bold_retriever
 
 
