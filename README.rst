@@ -30,12 +30,13 @@ Run this way
     pip install -r requirements.txt
 
 * run software
-You have to choose one of the databases available from BOLD <http://www.boldsystems.org/index.php/resources/api?type=idengine>
+You have to choose one of the databases available from BOLD
+http://www.boldsystems.org/index.php/resources/api?type=idengine
 and enter it as argument:
-    * COX1_SPECIES
-    * COX1
-    * COX1_SPECIES_PUBLIC
-    * COX1_L640bp
+* COX1_SPECIES
+* COX1
+* COX1_SPECIES_PUBLIC
+* COX1_L640bp
 
 For example::
 
@@ -59,9 +60,7 @@ For example::
 Changes
 -------
 
-* v0.1.0: You can specify which BOLD datase should be used for BLAST of FASTA
- sequences.
-* v0.0.7: Catching exception for NULL, list and text returned instead  of XML
- from BOLD.
+* v0.1.0: You can specify which BOLD datase should be used for BLAST of FASTA sequences.
+* v0.0.7: Catching exception for NULL, list and text returned instead  of XML from BOLD.
 * v0.0.6: Catching exception for malformed XML from BOLD.
 * v0.0.5: Catch exception when BOLD sends funny data such as ``{"481541":[]}``.
