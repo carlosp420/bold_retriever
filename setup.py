@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 try:
     from setuptools import setup
 except ImportError:
@@ -27,20 +26,17 @@ setup(
     package_dir={'bold_retriever':
                  'bold_retriever'},
     include_package_data=True,
-    install_requires=requirements,
     license="GPL v3",
     zip_safe=False,
     keywords='bold_retriever',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-		'Programming Language :: Python',
-		'Topic :: Scientific/Engineering :: Bio-Informatics',
+        'Programming Language :: Python',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
         'Environment :: Console',
         'Programming Language :: Python :: 2.7',
     ],
-    test_suite='tests',
-    tests_require=test_requirements
 )
