@@ -6,13 +6,13 @@ import sys
 def run_tests():
     dir = os.getcwd()
     if dir[-5:] != "tests":
-        os.chdir("tests")
+        tests_path = os.path.join(dir, "tests")
 
-    names = os.listdir(os.curdir)
+    names = os.listdir(tests_path)
     for name in names:
         if name[:5] == "test_" and name[-3:] == ".py":
             print(name)
-            cmd = "python " + name
+            cmd = "python " + os.path.join(tests_path, name)
             try:
                 subprocess.check_call(cmd, shell=True)
             except subprocess.CalledProcessError:

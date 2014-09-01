@@ -8,8 +8,8 @@ Bold Retriever
 .. image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
         :target: https://travis-ci.org/carlosp420/bold_retriever
 
-.. image:: https://pypip.in/download/bold_retriever/badge.svg
-        :target: https://pypi.python.org/pypi/bold_retriever
+.. image:: https://coveralls.io/repos/carlosp420/bold_retriever/badge.png?branch=master
+        :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
@@ -59,6 +59,8 @@ For example::
     GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
     GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
 
+Full documentation
+------------------
 See the full documentation at http://bold-retriever.readthedocs.org
 
 See additional usage info in :ref:`usage-label`.
