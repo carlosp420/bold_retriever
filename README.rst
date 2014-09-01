@@ -13,8 +13,8 @@ Bold Retriever
 
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
- database <http://boldsystems.org/> in order to get the taxa identification 
- based on the sequences.
+database http://boldsystems.org/ in order to get the taxa identification
+based on the sequences.
  
 Run this way
 ------------
