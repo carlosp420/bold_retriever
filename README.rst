@@ -8,7 +8,7 @@ Bold Retriever
 .. image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
         :target: https://travis-ci.org/carlosp420/bold_retriever
 
-.. image:: https://coveralls.io/repos/carlosp420/bold_retriever/badge.png?branch=master
+.. image:: https://img.shields.io/coveralls/carlosp420/bold_retriever.svg
         :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 
 
