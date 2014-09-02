@@ -15,12 +15,17 @@ class TestBoldRetriever(unittest.TestCase):
             url="http://boldsystems.org/index.php/Ids_xml",
             params={
                 'db': 'COX1_L640bp',
-                'sequence': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
+                'sequence': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTAT'
+                            'TGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTT'
+                            'ATTATAATTttttttATAGTAATACCTATTATAATT',
             }
         )
         request = r.text
-        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT'
-        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2'
+        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
+                     'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
+                     'tATAGTAATACCTATTATAATT'
+        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_San' \
+             'derling_juvenile_98;size=2'
         all_ids = []
         taxon_list = []
 
@@ -33,8 +38,11 @@ class TestBoldRetriever(unittest.TestCase):
     def test_parse_bold_xml2(self):
         # malformed XML returned from BOLD
         request = []
-        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT'
-        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2'
+        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
+                     'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
+                     'tATAGTAATACCTATTATAATT'
+        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_San' \
+             'derling_juvenile_98;size=2'
         all_ids = []
         taxon_list = []
 
@@ -47,8 +55,11 @@ class TestBoldRetriever(unittest.TestCase):
     def test_parse_bold_xml3(self):
         # malformed XML returned from BOLD
         request = None
-        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT'
-        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2'
+        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
+                     'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
+                     'tATAGTAATACCTATTATAATT'
+        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_San' \
+             'derling_juvenile_98;size=2'
         all_ids = []
         taxon_list = []
 
@@ -61,8 +72,11 @@ class TestBoldRetriever(unittest.TestCase):
     def test_parse_bold_xml4(self):
         # malformed XML returned from BOLD
         request = "TEXT"
-        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT'
-        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2'
+        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
+                     'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
+                     'tATAGTAATACCTATTATAATT'
+        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_San' \
+             'derling_juvenile_98;size=2'
         all_ids = []
         taxon_list = []
 
@@ -83,8 +97,11 @@ class TestBoldRetriever(unittest.TestCase):
                         <body>Don't forget me this weekend!</body>
                      </note>
                   """
-        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT'
-        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2'
+        seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
+                     'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
+                     'tATAGTAATACCTATTATAATT'
+        id = 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_San' \
+             'derling_juvenile_98;size=2'
         all_ids = []
         taxon_list = []
 
@@ -96,5 +113,5 @@ class TestBoldRetriever(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity = 2)
+    runner = unittest.TextTestRunner(verbosity=2)
     unittest.main(testRunner=runner)

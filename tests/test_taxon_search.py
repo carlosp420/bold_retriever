@@ -1,7 +1,4 @@
 import unittest
-import requests
-
-from Bio import SeqIO
 
 from bold_retriever import bold_retriever as br
 
@@ -31,5 +28,5 @@ class TestBoldRetriever(unittest.TestCase):
         self.assertEqual(results['taxID'], '23732')
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity = 2)
+    runner = unittest.TextTestRunner(verbosity=2)
     unittest.main(testRunner=runner)

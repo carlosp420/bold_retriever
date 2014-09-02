@@ -94,14 +94,18 @@ def taxon_search(obj):
                         found_division = True
                         return {'division': 'not animal', 'taxID': k}
                 except:
-                    print "\n>> Error got funny reply from BOLD: " + str(r.text)
+                    out_msg = "\n>> Error got funny reply from BOLD: "
+                    out_msg += str(r.text)
+                    print(out_msg)
     return None
 
 
 def taxon_data(obj):
     this_tax_id = obj['taxID']
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonData/"
-    payload = {'taxId': this_tax_id, 'dataTypes': 'basic', 'includeTree': 'true'}
+    payload = {'taxId': this_tax_id, 'dataTypes': 'basic',
+               'includeTree': 'true'
+               }
     req = requests.get(url, params=payload)
 
     # this is a "list" then

@@ -12,14 +12,11 @@ class TestBoldRetriever(unittest.TestCase):
     def test_parse_bold_xml_country_none(self):
         # normal request
         seq_object = "AGCCTGAGCTGGAATAGTTGGTACTTCGTTAAGTATTATAATTCGAGCTGAATT" \
-                "AGGACACCCCGGTGCTTTAATTGGTGATGACCAAATTTATAATGTAATTGTTACTGCTC" \
-                "ATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATTGGA"
+                     "AGGACACCCCGGTGCTTTAATTGGTGATGACCAAATTTATAATGTAATTGTTAC" \
+                     "TGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATTGGA"
         r = requests.get(
             url="http://boldsystems.org/index.php/Ids_xml",
-            params={
-                    'db': 'COX1_L640bp',
-                    'sequence': seq_object,
-            }
+            params={'db': 'COX1_L640bp', 'sequence': seq_object}
         )
         request = r.text
         id = "random_id"
@@ -38,5 +35,5 @@ class TestBoldRetriever(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity = 2)
+    runner = unittest.TextTestRunner(verbosity=2)
     unittest.main(testRunner=runner)

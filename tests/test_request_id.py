@@ -17,17 +17,19 @@ class TestBoldRetriever(unittest.TestCase):
             self.seq = str(seq_record.seq)
             self.id = str(seq_record.id)
 
-
     def test_request_id(self):
         results = br.request_id(self.seq, self.id, self.db)
         results = results[0]
         expected = {
-                'bold_id': 'SAMOS029-09',
-                'collection_country': 'Canada',
-                'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-                'similarity': '1',
-                'tax_id': 'Diptera',
-                'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
+            'bold_id': 'SAMOS029-09',
+            'collection_country': 'Canada',
+            'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGA'
+                   'CCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATA'
+                   'GTAATACCTATTATAATT',
+            'similarity': '1',
+            'tax_id': 'Diptera',
+            'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_'
+                  '10_21_Sanderling_juvenile_98;size=2',
         }
         self.assertEqual(results, expected)
 
@@ -37,13 +39,16 @@ class TestBoldRetriever(unittest.TestCase):
         expected = {
             'bold_id': 'SAMOS029-09',
             'collection_country': 'Canada',
-            'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
+            'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATG'
+                   'ACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttA'
+                   'TAGTAATACCTATTATAATT',
             'similarity': '1',
             'tax_id': 'Diptera',
-            'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-            }
+            'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_'
+                  '21_Sanderling_juvenile_98;size=2',
+        }
         self.assertEqual(results, expected)
 
 if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity = 2)
+    runner = unittest.TextTestRunner(verbosity=2)
     unittest.main(testRunner=runner)
