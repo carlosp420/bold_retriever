@@ -79,7 +79,7 @@ def taxon_search(obj):
     if r.text != "":
         response = json.loads(r.text)
         if hasattr(response, 'items'):
-            for k, v in json.loads(r.text).items():
+            for k, v in response.items():
                 try:
                     if v['tax_division'] == 'Animals':
                         # this is the taxID
