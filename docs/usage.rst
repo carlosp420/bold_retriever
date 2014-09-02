@@ -46,59 +46,59 @@ To use Bold Retriever in a project::
     >>> db = "COX1_SPECIES"
 
     >>> all_ids = []
-    >>> for seq_record in SeqIO.parse("ionx13.fas", "fasta"):
-    >>>    this_ids = br.request_id(seq_record.seq, seq_record.id, db)
-    >>>    all_ids.append(this_ids)
-    >>> print(all_ids)
-    [[{'bold_id': 'SAMOS029-09',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Diptera'},
-    {'bold_id': 'JWDCC841-10',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Culicidae'},
-    {'bold_id': 'BBDCN544-10',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Ochlerotatus impiger'},
-    {'bold_id': 'SSEIC5967-13',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Ochlerotatus nigripes'}]]
+    >>> for seq_record in SeqIO.parse("tests/ionx13.fas", "fasta"):
+    ...    my_ids = br.request_id(seq_record.seq, seq_record.id, db)
+    Psocoptera 0.9796
+    Selenops mexicanus 0.8933
+    Austrophorocera Janzen03 0.8736
+    Austrophorocera Janzen04 0.8667
+    Lepidoptera 0.8667
+    Proechimys simonsi 0.8667
+    Diptera 0.8667
+    Scathophaga stercoraria 0.8667
+    Culex quinquefasciatus 0.8667
+    Folsomia fimetaria L1 0.8652
+    Lepidopsocidae sp. RS-2001 0.8639
+    lepidopsocid RS-2001 0.8639
+    Selenops micropalpus 0.859
+    Geocoris pallidipennis 0.8586
+    Selenops sp. 2 SCC-2009 0.8571
+    Mermessus trilobatus 0.8571
+    Drosophila neotestacea 0.8571
+    Hemiptera 0.8556
+    Miromantis mirandula 0.8537
+    Houghia gracilis 0.8533
+    Adoxophyes nr. marmarygodes 0.8533
+    Trichoptera 0.8533
+    Araneae 0.8533
+    Hydroporus morio 0.8533
+    Rodentia 0.8533
 
-In that case the output will be contained in the variable ``all_ids`` and
+In that case the output will be contained in the variable ``my_ids`` and
 will look like this::
 
-    [[{'bold_id': 'SAMOS029-09',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Diptera'},
-    {'bold_id': 'JWDCC841-10',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Culicidae'},
-    {'bold_id': 'BBDCN544-10',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Ochlerotatus impiger'},
-    {'bold_id': 'SSEIC5967-13',
-        'collection_country': 'Canada',
-        'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_10_21_Sanderling_juvenile_98;size=2',
-        'seq': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttttATAGTAATACCTATTATAATT',
-        'similarity': '1',
-        'tax_id': 'Ochlerotatus nigripes'}]]
+    [{'bold_id': 'FIPSO166-14',
+    'collection_country': 'Finland',
+    'id': 'ionx13',
+    'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
+    'similarity': '0.9796',
+    'tax_id': 'Psocoptera'},
+    {'bold_id': 'GBCH4611-10',
+    'collection_country': 'None',
+    'id': 'ionx13',
+    'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
+    'similarity': '0.8933',
+    'tax_id': 'Selenops mexicanus'},
+    {'bold_id': 'ASTAQ477-06',
+    'collection_country': 'Costa Rica',
+    'id': 'ionx13',
+    'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
+    'similarity': '0.8736',
+    'tax_id': 'Austrophorocera Janzen03'},
+    {'bold_id': 'ASTAR353-07',
+    'collection_country': 'Costa Rica',
+    'id': 'ionx13',
+    'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
+    'similarity': '0.8667',
+    'tax_id': 'Austrophorocera Janzen04'}]
+
