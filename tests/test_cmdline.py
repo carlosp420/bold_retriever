@@ -17,3 +17,9 @@ class CmdlineTest(unittest.TestCase):
     def test_cmdline_file(self):
         with self.assertRaises(SystemExit):
             self.parser.parse_args(['-f', 'ionx23b.fas'])
+
+    # User enters both arguments
+    def test_cmdline(self):
+        args = self.parser.parse_args(['-f', 'ionx23b.fas', '-db', 'COX1'])
+        expected = 'COX1'
+        self.assertEqual(expected, args.db)

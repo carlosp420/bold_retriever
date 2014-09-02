@@ -148,6 +148,16 @@ def create_parser():
     return parser
 
 
+def create_output_file(f):
+    out = "bold_id,seq_id,similarity,collection_country,division,taxon,"
+    out += "class,order,family\n"
+    output_filename = f.strip() + "_output.csv"
+    myfile = codecs.open(output_filename, "w", "utf-8")
+    myfile.write(out)
+    myfile.close()
+    return output_filename
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
@@ -155,12 +165,7 @@ def main():
     db = args.db
     f = args.fasta_file
 
-    out = "bold_id,seq_id,similarity,collection_country,division,taxon,"
-    out += "class,order,family\n"
-    output_filename = f.strip() + "_output.csv"
-    myfile = codecs.open(output_filename, "w", "utf-8")
-    myfile.write(out)
-    myfile.close()
+    output_filename = create_output_file(f)
     for seq_record in SeqIO.parse(f, "fasta"):
         out = ""
         all_ids = request_id(seq_record.seq, seq_record.id, db)

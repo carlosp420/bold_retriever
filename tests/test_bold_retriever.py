@@ -1,4 +1,6 @@
+import os
 import unittest
+
 import requests
 
 from bold_retriever import bold_retriever as br
@@ -110,6 +112,18 @@ class TestBoldRetriever(unittest.TestCase):
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
+
+    def test_create_output_file1(self):
+        result = br.create_output_file("my_fasta_file.fas")
+        expected = "my_fasta_file.fas_output.csv"
+        self.assertEqual(result, expected)
+
+    def test_create_output_file2(self):
+        expected = "my_fasta_file.fas_output.csv"
+        if os.path.isfile(expected):
+            os.remove(expected)
+        br.create_output_file("my_fasta_file.fas")
+        self.assertTrue(os.path.isfile(expected))
 
 
 if __name__ == "__main__":
