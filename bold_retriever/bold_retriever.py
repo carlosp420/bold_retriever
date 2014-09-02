@@ -77,26 +77,30 @@ def taxon_search(obj):
     r = requests.get(url, params=payload)
     found_division = False
     if r.text != "":
-        for k, v in json.loads(r.text).items():
-            try:
-                if v['tax_division'] == 'Animals':
-                    # this is the taxID
-                    found_division = True
-                    return {'division': 'animal', 'taxID': k}
-            except:
-                print "\n>> Error: " + str(r.text)
-
-        if not found_division:
+        response = json.loads(r.text)
+        if hasattr(response, 'items'):
             for k, v in json.loads(r.text).items():
                 try:
-                    if v['tax_division'] != 'Animals':
+                    if v['tax_division'] == 'Animals':
                         # this is the taxID
                         found_division = True
-                        return {'division': 'not animal', 'taxID': k}
+                        return {'division': 'animal', 'taxID': k}
                 except:
-                    out_msg = "\n>> Error got funny reply from BOLD: "
-                    out_msg += str(r.text)
-                    print(out_msg)
+                    print "\n>> Error: " + str(r.text)
+
+            if not found_division:
+                for k, v in json.loads(r.text).items():
+                    try:
+                        if v['tax_division'] != 'Animals':
+                            # this is the taxID
+                            found_division = True
+                            return {'division': 'not animal', 'taxID': k}
+                    except:
+                        out_msg = "\n>> Error got funny reply from BOLD: "
+                        out_msg += str(r.text)
+                        print(out_msg)
+        else:
+            return None
     return None
 
 

@@ -63,6 +63,4 @@ Full documentation
 ------------------
 See the full documentation at http://bold-retriever.readthedocs.org
 
-See additional usage info in :ref:`usage-label`.
-
 .. include:: ../HISTORY.rst
