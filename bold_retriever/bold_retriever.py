@@ -185,16 +185,9 @@ def process_classification(obj):
     return out
 
 
-def main():
-    parser = create_parser()
-    args = parser.parse_args()
-
-    db = args.db
-    f = args.fasta_file
-
-    output_filename = create_output_file(f)
-    for seq_record in SeqIO.parse(f, "fasta"):
-        out = ""
+def generate_output_content_for_file(fasta_file, db):
+    out = ""
+    for seq_record in SeqIO.parse(fasta_file, "fasta"):
         all_ids = request_id(seq_record.seq, seq_record.id, db)
         for obj in all_ids:
             if 'tax_id' in obj:
@@ -212,10 +205,22 @@ def main():
                 out += obj['division'] + ","
                 out += obj['tax_id'] + ","
                 out += process_classification(obj)
+    return out
 
-        myfile = codecs.open(output_filename, "a", "utf-8")
-        myfile.write(out)
-        myfile.close()
+
+def main():
+    parser = create_parser()
+    args = parser.parse_args()
+
+    db = args.db
+    f = args.fasta_file
+
+    output_filename = create_output_file(f)
+    out = generate_output_content_for_file(f, db)
+
+    myfile = codecs.open(output_filename, "a", "utf-8")
+    myfile.write(out)
+    myfile.close()
 
 
 if __name__ == "__main__":

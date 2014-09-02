@@ -136,6 +136,31 @@ class TestBoldRetriever(unittest.TestCase):
         result = br.process_classification(obj)
         self.assertEqual(expected, result)
 
+    def test_process_classification_class_none(self):
+        obj = {
+            'classification': 'true',
+        }
+        expected = "None,None,None,\n"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_process_classification_false(self):
+        obj = {
+            'classification': 'false',
+        }
+        expected = "None,None,None\n"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_generate_output_content_for_file(self):
+        result = br.generate_output_content_for_file(
+            'ionx13.fas',
+            'COX1_SPECIES',
+        )
+        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Ins" \
+                   "ecta,Psocoptera,None,"
+        self.assertEqual(expected, result.split('\n')[0])
+
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)
