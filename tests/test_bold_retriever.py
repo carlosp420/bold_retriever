@@ -153,8 +153,12 @@ class TestBoldRetriever(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_generate_output_content_for_file(self):
-        result = br.generate_output_content_for_file(
+        fasta_file = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
             'ionx13.fas',
+        )
+        result = br.generate_output_content_for_file(
+            fasta_file,
             'COX1_SPECIES',
         )
         expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Ins" \
