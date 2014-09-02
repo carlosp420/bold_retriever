@@ -221,6 +221,5 @@ def main():
     create_output_file(f, out)
 
 
-
 if __name__ == "__main__":
     main()
