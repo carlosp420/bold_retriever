@@ -158,6 +158,29 @@ def create_output_file(f):
     return output_filename
 
 
+def process_classification(obj):
+    out = ""
+    if obj['classification'] == "true":
+        if 'class' in obj:
+            out += obj['class'] + ","
+        else:
+            out += "None,"
+
+        if 'order' in obj:
+            out += obj['order'] + ","
+        else:
+            out += "None,"
+
+        if 'family' in obj:
+            out += obj['family'] + ","
+        else:
+            out += "None,"
+        out += "\n"
+    else:
+        out += "None,None,None\n"
+    return out
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
@@ -184,24 +207,8 @@ def main():
                 out += obj['collection_country'] + ","
                 out += obj['division'] + ","
                 out += obj['tax_id'] + ","
-                if obj['classification'] == "true":
-                    if 'class' in obj:
-                        out += obj['class'] + ","
-                    else:
-                        out += "None,"
+                out += process_classification(obj)
 
-                    if 'order' in obj:
-                        out += obj['order'] + ","
-                    else:
-                        out += "None,"
-
-                    if 'family' in obj:
-                        out += obj['family'] + ","
-                    else:
-                        out += "None,"
-                    out += "\n"
-                else:
-                    out += "None,None,None\n"
         myfile = codecs.open(output_filename, "a", "utf-8")
         myfile.write(out)
         myfile.close()

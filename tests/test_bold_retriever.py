@@ -125,6 +125,17 @@ class TestBoldRetriever(unittest.TestCase):
         br.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
+    def test_process_classification(self):
+        obj = {
+            'classification': 'true',
+            'class': 'Insecta',
+            'order': 'Lepidoptera',
+            'family': 'Nymphalidae',
+        }
+        expected = "Insecta,Lepidoptera,Nymphalidae,\n"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)
