@@ -152,12 +152,14 @@ def create_parser():
     return parser
 
 
-def create_output_file(f):
-    out = "bold_id,seq_id,similarity,collection_country,division,taxon,"
-    out += "class,order,family\n"
+def create_output_file(f, out):
+    output = "bold_id,seq_id,similarity,collection_country,division,taxon,"
+    output += "class,order,family\n"
+    output += out
+
     output_filename = f.strip() + "_output.csv"
     myfile = codecs.open(output_filename, "w", "utf-8")
-    myfile.write(out)
+    myfile.write(output)
     myfile.close()
     return output_filename
 
@@ -214,13 +216,10 @@ def main():
 
     db = args.db
     f = args.fasta_file
-
-    output_filename = create_output_file(f)
     out = generate_output_content_for_file(f, db)
 
-    myfile = codecs.open(output_filename, "a", "utf-8")
-    myfile.write(out)
-    myfile.close()
+    create_output_file(f, out)
+
 
 
 if __name__ == "__main__":

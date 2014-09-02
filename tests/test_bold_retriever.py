@@ -113,8 +113,8 @@ class TestBoldRetriever(unittest.TestCase):
         expected = []
         self.assertEqual(results, expected)
 
-    def test_create_output_file1(self):
-        result = br.create_output_file("my_fasta_file.fas")
+    def test_create_output_file(self):
+        result = br.create_output_file("my_fasta_file.fas", "output-contents")
         expected = "my_fasta_file.fas_output.csv"
         self.assertEqual(result, expected)
 
@@ -122,7 +122,7 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "my_fasta_file.fas_output.csv"
         if os.path.isfile(expected):
             os.remove(expected)
-        br.create_output_file("my_fasta_file.fas")
+        br.create_output_file("my_fasta_file.fas", "output-contents")
         self.assertTrue(os.path.isfile(expected))
 
     def test_process_classification(self):
