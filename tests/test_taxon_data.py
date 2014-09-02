@@ -15,13 +15,6 @@ class TestBoldRetriever(unittest.TestCase):
         results = br.taxon_data(obj)
         self.assertEqual(results, obj)
 
-        taxID = '23732'
-        obj = {'division': 'not animal', 'taxID': taxID}
-        results = br.taxon_data(obj)
-        print "\nthis results", results
-        print "\nthis obj", obj
-        self.assertEqual(results['family'], obj['family'])
-
     def test_taxon_data_returns_false(self):
         taxID = '29737001928929'
         obj = {'classification': 'false', 'taxID': taxID}
