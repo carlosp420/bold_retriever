@@ -210,15 +210,22 @@ def generate_output_content_for_file(fasta_file, db):
     return out
 
 
+def get_args(args):
+    db = args.db
+    f = args.fasta_file
+    return f, db
+
+
+def get_started(args):
+    f, db = get_args(args)
+    out = generate_output_content_for_file(f, db)
+    create_output_file(f, out)
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
-
-    db = args.db
-    f = args.fasta_file
-    out = generate_output_content_for_file(f, db)
-
-    create_output_file(f, out)
+    get_started(args)
 
 
 if __name__ == "__main__":

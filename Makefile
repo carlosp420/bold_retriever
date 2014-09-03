@@ -43,7 +43,7 @@ test:
 test-all:
 	tox
 
-coverage:
+coverage: clean-test
 	nosetests --with-coverage --cover-html -w tests  --cover-package=bold_retriever --cover-erase --with-doctest  --doctest-extension=rst
 
 docs:
