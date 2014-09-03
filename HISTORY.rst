@@ -3,7 +3,8 @@
 History
 -------
 
-* v0.1.4: Fixed bug in taxon_search functio
+* v0.1.5: Additionat tests coverage 92%
+* v0.1.4: Fixed bug in taxon_search function
 * v0.1.3: Coverage 75%
 * v0.1.2: Pep8 and test coverage 69%
 * v0.1.1: Packaged as Python module.
