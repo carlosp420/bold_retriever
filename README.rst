@@ -11,6 +11,8 @@ Bold Retriever
 .. image:: https://img.shields.io/coveralls/carlosp420/bold_retriever.svg
         :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 
+.. image:: https://gemnasium.com/carlosp420/bold_retriever.svg
+        :target: https://gemnasium.com/carlosp420/bold_retriever
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
 database http://boldsystems.org/ in order to get the taxa identification
@@ -62,5 +64,3 @@ For example::
 Full documentation
 ------------------
 See the full documentation at http://bold-retriever.readthedocs.org
-
-.. include:: ../HISTORY.rst
