@@ -145,7 +145,7 @@ def create_parser():
                             'COX1',
                             'COX1_SPECIES_PUBLIC',
                             'COX1_L640bp',
-                            ],
+                        ],
                         required=True,
                         dest='db',
                         )

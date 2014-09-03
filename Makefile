@@ -30,6 +30,9 @@ clean-test:
 	rm -fr .tox/
 	rm -f .coverage
 	rm -fr htmlcov/
+	rm -rf cover
+	rm -rf tests/cover
+	rm -rf tests/*csv
 
 lint:
 	flake8 bold_retriever tests
@@ -41,7 +44,7 @@ test-all:
 	tox
 
 coverage:
-	nosetests --with-coverage --cover-html
+	nosetests --with-coverage --cover-html -w tests  --cover-package=bold_retriever --cover-erase --with-doctest  --doctest-extension=rst
 
 docs:
 	rm -f docs/bold_retriever.rst

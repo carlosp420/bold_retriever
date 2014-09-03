@@ -2,21 +2,8 @@
 Bold Retriever
 ==============
 
-.. image:: https://badge.fury.io/py/bold_retriever.svg
-    :target: http://badge.fury.io/py/bold_retriever
+|Pypi index| |Build Status| |Cover alls| |Dependencies status| |Download numbers|
 
-.. image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
-        :target: https://travis-ci.org/carlosp420/bold_retriever
-
-.. image:: https://img.shields.io/coveralls/carlosp420/bold_retriever.svg
-        :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
-
-.. image:: https://gemnasium.com/carlosp420/bold_retriever.svg
-        :target: https://gemnasium.com/carlosp420/bold_retriever
-
-.. image:: https://pypip.in/download/bold_retriever/badge.svg
-        :target: https://crate.io/packages/bold_retriever
-        :alt: Downloads
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
 database http://boldsystems.org/ in order to get the taxa identification
@@ -68,3 +55,15 @@ For example::
 Full documentation
 ------------------
 See the full documentation at http://bold-retriever.readthedocs.org
+
+.. |Pypi index| image:: https://badge.fury.io/py/bold_retriever.svg
+   :target: http://badge.fury.io/py/bold_retriever
+.. |Build Status| image:: https://travis-ci.org/carlosp420/bold_retriever.png?branch=master
+   :target: https://travis-ci.org/carlosp420/bold_retriever
+.. |Cover alls| image:: https://img.shields.io/coveralls/carlosp420/bold_retriever.svg
+   :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
+.. |Dependencies status| image:: https://gemnasium.com/carlosp420/bold_retriever.svg
+   :target: https://gmnasium.com/carlosp420/bold_retriever
+.. |Downloads numbers| image:: https://pypip.i/download/bold_retriever/badge.svg
+   :target: https://rate.io/packages/bold_retriever
+   :alt: Downloads
