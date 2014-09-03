@@ -64,6 +64,6 @@ See the full documentation at http://bold-retriever.readthedocs.org
    :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 .. |Dependencies status| image:: https://gemnasium.com/carlosp420/bold_retriever.svg
    :target: https://gmnasium.com/carlosp420/bold_retriever
-.. |Downloads numbers| image:: https://pypip.in/download/bold_retriever/badge.svg
+.. |Download numbers| image:: https://pypip.in/download/bold_retriever/badge.svg
    :target: https://crate.io/packages/bold_retriever
    :alt: Downloads
