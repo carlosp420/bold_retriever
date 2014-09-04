@@ -178,9 +178,9 @@ def process_classification(obj):
             out += "None,"
 
         if 'family' in obj:
-            out += obj['family'] + ","
+            out += obj['family']
         else:
-            out += "None,"
+            out += "None"
         out += "\n"
     else:
         out += "None,None,None\n"
