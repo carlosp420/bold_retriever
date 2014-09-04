@@ -1,3 +1,4 @@
+import codecs
 import os
 import unittest
 
@@ -114,7 +115,7 @@ class TestBoldRetriever(unittest.TestCase):
         self.assertEqual(results, expected)
 
     def test_create_output_file(self):
-        result = br.create_output_file("my_fasta_file.fas", "output-contents")
+        result = br.create_output_file("my_fasta_file.fas")
         expected = "my_fasta_file.fas_output.csv"
         self.assertEqual(result, expected)
 
@@ -122,7 +123,7 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "my_fasta_file.fas_output.csv"
         if os.path.isfile(expected):
             os.remove(expected)
-        br.create_output_file("my_fasta_file.fas", "output-contents")
+        br.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
     def test_process_classification(self):
@@ -153,17 +154,23 @@ class TestBoldRetriever(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_generate_output_content_for_file(self):
+        output_filename = 'ionx13.fas_output.csv'
+        if os.path.isfile(output_filename):
+            os.remove(output_filename)
         fasta_file = os.path.join(
             os.path.abspath(os.path.dirname(__file__)),
             'ionx13.fas',
         )
-        result = br.generate_output_content_for_file(
+        br.generate_output_content_for_file(
+            output_filename,
             fasta_file,
             'COX1_SPECIES',
         )
-        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Ins" \
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
+        expected = "FIPSO166-14,ionx13,0.9796," \
+                   "Finland,animal,Psocoptera,Ins" \
                    "ecta,Psocoptera,None,"
-        self.assertEqual(expected, result.split('\n')[0])
+        self.assertEqual(expected, result.strip())
 
 
 if __name__ == "__main__":

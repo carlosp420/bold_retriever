@@ -152,10 +152,10 @@ def create_parser():
     return parser
 
 
-def create_output_file(f, out):
+def create_output_file(f):
+    """Containing only column headers of the CSV file."""
     output = "bold_id,seq_id,similarity,collection_country,division,taxon,"
     output += "class,order,family\n"
-    output += out
 
     output_filename = f.strip() + "_output.csv"
     myfile = codecs.open(output_filename, "w", "utf-8")
@@ -187,9 +187,9 @@ def process_classification(obj):
     return out
 
 
-def generate_output_content_for_file(fasta_file, db):
-    out = ""
+def generate_output_content_for_file(output_filename, fasta_file, db):
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
+        out = ""
         all_ids = request_id(seq_record.seq, seq_record.id, db)
         for obj in all_ids:
             if 'tax_id' in obj:
@@ -207,7 +207,9 @@ def generate_output_content_for_file(fasta_file, db):
                 out += obj['division'] + ","
                 out += obj['tax_id'] + ","
                 out += process_classification(obj)
-    return out
+        with codecs.open(output_filename, "a", "utf-8") as handle:
+            handle.write(out)
+    return "Processed all sequences."
 
 
 def get_args(args):
@@ -217,9 +219,9 @@ def get_args(args):
 
 
 def get_started(args):
-    f, db = get_args(args)
-    out = generate_output_content_for_file(f, db)
-    create_output_file(f, out)
+    fasta_file, db = get_args(args)
+    output_filename = create_output_file(fasta_file)
+    generate_output_content_for_file(output_filename, fasta_file, db)
 
 
 def main():
