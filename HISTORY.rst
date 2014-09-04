@@ -3,6 +3,7 @@
 History
 -------
 
+* v0.1.6: Append taxon identification results to file as we get them.
 * v0.1.5: Additionat tests coverage 92%
 * v0.1.4: Fixed bug in taxon_search function
 * v0.1.3: Coverage 75%

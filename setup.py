@@ -12,7 +12,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
 setup(
     name='bold_retriever',
-    version='0.1.5',
+    version='0.1.6',
     description='It queries the BOLD database to get identification of taxa ' \
                 'based on COI sequences',
     long_description=readme + '\n\n' + history,
