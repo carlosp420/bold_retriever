@@ -1,8 +1,10 @@
 ============
 Installation
 ============
+You can download the lastest version of the software here:
+https://github.com/carlosp420/bold_retriever/releases
 
-At the command line::
+Or, at the command line::
 
     $ # Clone repository
     $ git clone https://github.com/carlosp420/bold_retriever.git
