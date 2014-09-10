@@ -1,4 +1,5 @@
 import os
+import subprocess
 import unittest
 
 from bold_retriever import bold_retriever as br
@@ -25,6 +26,17 @@ class CmdlineTest(unittest.TestCase):
         expected = 'COX1'
         self.assertEqual(expected, args.db)
 
+    def test_cmdline_main(self):
+        cwd = os.path.abspath(os.path.dirname(__file__))
+        bold_retriever = os.path.join(cwd, '..', 'bold_retriever',
+                                      'bold_retriever.py')
+        print(bold_retriever)
+        cmd = "python " + bold_retriever + " -f " + os.path.join(cwd,
+                                                                 'otu99.fas')
+        cmd += " -db COX1_SPECIES"
+        p = subprocess.check_call(cmd, shell=True)
+        self.assertEqual(0, p)
+
     def test_get_args(self):
         args = self.parser.parse_args(['-f', 'ionx13.fas', '-db', 'COX1'])
         f, db = br.get_args(args)
@@ -39,4 +51,14 @@ class CmdlineTest(unittest.TestCase):
         args = self.parser.parse_args(['-f', input_file, '-db', 'COX1'])
         br.get_started(args)
 
+        self.assertTrue(os.path.isfile(result_file))
+
+    def test_otu99(self):
+        """It should pass despite returning empty list for classification."""
+        test_folder = os.path.abspath(os.path.dirname(__file__))
+        input_file = os.path.join(test_folder, 'otu99.fas')
+        args = self.parser.parse_args(['-f', input_file, '-db',
+                                       'COX1_SPECIES'])
+        br.get_started(args)
+        result_file = os.path.join(test_folder, 'otu99.fas_output.csv')
         self.assertTrue(os.path.isfile(result_file))

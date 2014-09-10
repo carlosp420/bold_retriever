@@ -118,15 +118,19 @@ def taxon_data(obj):
         return obj
     # this is a string not a list
     elif isinstance(req.text, basestring):
-        for key, val in json.loads(req.text).items():
-            if val['tax_rank'] == 'class':
-                obj['class'] = val['taxon']
-            if val['tax_rank'] == 'order':
-                obj['order'] = val['taxon']
-            if val['tax_rank'] == 'family':
-                obj['family'] = val['taxon']
+        print(">>>>>Req.text", json.loads(req.text).items())
+        items = json.loads(req.text).items()
+        for key, val in items:
+            try:
+                if val['tax_rank'] == 'class':
+                    obj['class'] = val['taxon']
+                if val['tax_rank'] == 'order':
+                    obj['order'] = val['taxon']
+                if val['tax_rank'] == 'family':
+                    obj['family'] = val['taxon']
+            except TypeError:
+                print(">> Exception: No values for some of the keys.")
             obj['classification'] = "true"
-        print obj
         return obj
 
 
