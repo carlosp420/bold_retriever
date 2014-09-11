@@ -56,8 +56,8 @@ def request_id(seq_object, id, db):
         return None
 
     if all_ids is not None:
-        for i in all_ids:
-            print i['tax_id'], i['similarity']
+        # for i in all_ids:
+        # print i['tax_id'], i['similarity']
         return all_ids
     else:
         return None
@@ -69,7 +69,7 @@ def taxon_search(obj):
     if len(tax_id) > 1:
         tax_id = tax_id[0]
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonSearch/"
-    print "I am sending this %s" % tax_id
+    # print "I am sending this %s" % tax_id
     payload = {
         'taxName': tax_id,
         'fuzzy': 'false',
@@ -118,7 +118,6 @@ def taxon_data(obj):
         return obj
     # this is a string not a list
     elif isinstance(req.text, basestring):
-        print(">>>>>Req.text", json.loads(req.text).items())
         items = json.loads(req.text).items()
         for key, val in items:
             try:
@@ -193,6 +192,7 @@ def process_classification(obj):
 
 def generate_output_content_for_file(output_filename, fasta_file, db):
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
+        print("Processing sequence for %s" % st(seq_record.id))
         out = ""
         all_ids = request_id(seq_record.seq, seq_record.id, db)
         for obj in all_ids:
@@ -203,7 +203,7 @@ def generate_output_content_for_file(output_filename, fasta_file, db):
                     continue
                 obj['taxID'] = r['taxID']
                 obj['division'] = r['division']
-                print "== obj", obj
+                # print "== obj", obj
                 obj = taxon_data(obj)
                 out += obj['bold_id'] + ","
                 out += obj['id'] + "," + obj['similarity'] + ","
