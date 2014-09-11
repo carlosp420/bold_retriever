@@ -44,7 +44,7 @@ test-all:
 	tox
 
 coverage: clean-test
-	nosetests --with-coverage --cover-html -w tests  --cover-package=bold_retriever --cover-erase --with-doctest  --doctest-extension=rst
+	nosetests --with-coverage --cover-html -w tests  --cover-package=bold_retriever --cover-erase --with-doctest  --doctest-extension=rst -v 
 
 docs:
 	rm -f docs/bold_retriever.rst

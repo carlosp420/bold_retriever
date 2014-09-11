@@ -192,7 +192,7 @@ def process_classification(obj):
 
 def generate_output_content_for_file(output_filename, fasta_file, db):
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
-        print("Processing sequence for %s" % st(seq_record.id))
+        print("Processing sequence for %s" % str(seq_record.id))
         out = ""
         all_ids = request_id(seq_record.seq, seq_record.id, db)
         for obj in all_ids:
@@ -213,6 +213,7 @@ def generate_output_content_for_file(output_filename, fasta_file, db):
                 out += process_classification(obj)
         with codecs.open(output_filename, "a", "utf-8") as handle:
             handle.write(out)
+    print("Processed all sequences.")
     return "Processed all sequences."
 
 
