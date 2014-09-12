@@ -49,16 +49,17 @@ def request_id(seq_object, id, db):
     url = "http://boldsystems.org/index.php/Ids_xml"
     payload = {'db': db, 'sequence': str(seq_object)}
     r = requests.get(url, params=payload)
-    if r.text is not None:
+    if isinstance(r.text, basestring):
         all_ids, taxon_list = parse_bold_xml(r.text, seq_object, id, all_ids,
                                              taxon_list)
-    else:
+        if all_ids is not None and len(all_ids) > 0:
+            # for i in all_ids:
+            # print i['tax_id'], i['similarity']
+            return all_ids
+        else:
+            return None
+    elif not isinstance(r.text, basestring):
         return None
-
-    if all_ids is not None:
-        # for i in all_ids:
-        # print i['tax_id'], i['similarity']
-        return all_ids
     else:
         return None
 

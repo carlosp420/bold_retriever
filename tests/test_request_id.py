@@ -19,7 +19,6 @@ class TestBoldRetriever(unittest.TestCase):
 
     def test_request_id(self):
         results = br.request_id(self.seq, self.id, self.db)
-        results = results[0]
         expected = {
             'bold_id': 'SAMOS029-09',
             'collection_country': 'Canada',
@@ -31,11 +30,11 @@ class TestBoldRetriever(unittest.TestCase):
             'id': 'IonX17_rvr_ZA2013-0055_HochstetterForland_28_7_2013_'
                   '10_21_Sanderling_juvenile_98;size=2',
         }
-        self.assertEqual(results, expected)
+        self.assertEqual(results[0], expected)
 
     def test_request_id_when_request_returns_none(self):
         results = br.request_id("", self.id, self.db)
-        self.assertEqual(results, [])
+        self.assertEqual(results, None)
 
 
 if __name__ == "__main__":
