@@ -3,6 +3,7 @@
 History
 -------
 
+* v0.1.8: Fixed bug for exception when BOLD sends empty list of taxon names.
 * v0.1.7: Fixed bug for exception when BOLD sends empty list of taxon names.
 * v0.1.6: Append taxon identification results to file as we get them.
 * v0.1.5: Additionat tests coverage 92%

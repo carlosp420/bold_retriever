@@ -5,7 +5,7 @@ Pygments==1.6
 Sphinx==1.2.3
 argparse==1.2.1
 biopython==1.64
-bold-retriever==0.1.7
+bold-retriever==0.1.8
 certifi==14.05.14
 coverage==3.7.1
 coveralls==0.4.2

@@ -1,7 +1,6 @@
 import os
 import unittest
 
-from Bio import SeqIO
 
 from bold_retriever import bold_retriever as br
 
@@ -25,7 +24,6 @@ class TestGenerateContent(unittest.TestCase):
         lines = open(self.output_filename, "r").readlines()[0]
         expected = 'nohit,OTU_50'
         self.assertTrue(lines.startswith(expected))
-
 
 
 if __name__ == "__main__":
