@@ -196,24 +196,30 @@ def generate_output_content_for_file(output_filename, fasta_file, db):
         print("Processing sequence for %s" % str(seq_record.id))
         out = ""
         all_ids = request_id(seq_record.seq, seq_record.id, db)
-        for obj in all_ids:
-            if 'tax_id' in obj:
-                r = taxon_search(obj)
+        if all_ids is not None:
+            for obj in all_ids:
+                if 'tax_id' in obj:
+                    r = taxon_search(obj)
 
-                if r is None:
-                    continue
-                obj['taxID'] = r['taxID']
-                obj['division'] = r['division']
-                # print "== obj", obj
-                obj = taxon_data(obj)
-                out += obj['bold_id'] + ","
-                out += obj['id'] + "," + obj['similarity'] + ","
-                out += obj['collection_country'] + ","
-                out += obj['division'] + ","
-                out += obj['tax_id'] + ","
-                out += process_classification(obj)
-        with codecs.open(output_filename, "a", "utf-8") as handle:
-            handle.write(out)
+                    if r is None:
+                        continue
+                    obj['taxID'] = r['taxID']
+                    obj['division'] = r['division']
+                    # print "== obj", obj
+                    obj = taxon_data(obj)
+                    out += obj['bold_id'] + ","
+                    out += obj['id'] + "," + obj['similarity'] + ","
+                    out += obj['collection_country'] + ","
+                    out += obj['division'] + ","
+                    out += obj['tax_id'] + ","
+                    out += process_classification(obj)
+            with codecs.open(output_filename, "a", "utf-8") as handle:
+                handle.write(out)
+        else:
+            out = "nohit," + str(seq_record.id) + ","
+            out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
+            with codecs.open(output_filename, "a", "utf-8") as handle:
+                handle.write(out)
     print("Processed all sequences.")
     return "Processed all sequences."
 
