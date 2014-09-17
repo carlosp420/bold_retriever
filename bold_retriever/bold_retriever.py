@@ -44,9 +44,10 @@ def request_id(seq_object, id, db, debug=False):
     """
     Sends a sequence to BOLD REST API for identification using a database
     specified by the user.
+
     :param seq_object: sequence as string
     :param id: sequence id as string
-    :param db:
+    :param db: BOLD database specified by user as string
     :return: two lists of diciontaries with some identification info
     """
     all_ids = []
