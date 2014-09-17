@@ -36,6 +36,9 @@ class TestBoldRetriever(unittest.TestCase):
         results = br.request_id("", self.id, self.db)
         self.assertEqual(results, None)
 
+    def test_request_id_when_request_returns_none2(self):
+        results = br.request_id("", self.id, "", debug=True)
+        self.assertEqual(results, None)
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)

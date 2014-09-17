@@ -40,17 +40,27 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
         return all_ids, taxon_list
 
 
-def request_id(seq_object, id, db):
-    # input a sequence object
-    # sends sequence to BOLD REST API for Identification Engine db=COX1_L640bp
-    # output a dictionary with the info
+def request_id(seq_object, id, db, debug=False):
+    """
+    Sends a sequence to BOLD REST API for identification using a database
+    specified by the user.
+    :param seq_object: sequence as string
+    :param id: sequence id as string
+    :param db:
+    :return: two lists of diciontaries with some identification info
+    """
     all_ids = []
     taxon_list = []
     url = "http://boldsystems.org/index.php/Ids_xml"
     payload = {'db': db, 'sequence': str(seq_object)}
+
     r = requests.get(url, params=payload)
-    if isinstance(r.text, basestring):
-        all_ids, taxon_list = parse_bold_xml(r.text, seq_object, id, all_ids,
+    r_text = r.text
+    if debug is True:
+        r_text = []
+
+    if isinstance(r_text, basestring):
+        all_ids, taxon_list = parse_bold_xml(r_text, seq_object, id, all_ids,
                                              taxon_list)
         if all_ids is not None and len(all_ids) > 0:
             # for i in all_ids:
@@ -58,8 +68,6 @@ def request_id(seq_object, id, db):
             return all_ids
         else:
             return None
-    elif not isinstance(r.text, basestring):
-        return None
     else:
         return None
 
