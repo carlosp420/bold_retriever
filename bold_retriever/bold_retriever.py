@@ -2,9 +2,12 @@ import argparse
 from argparse import RawTextHelpFormatter
 import codecs
 import json
+import logging
+import re
 import xml.etree.ElementTree as ET
 
 from Bio import SeqIO
+from bs4 import BeautifulSoup
 import requests
 
 
@@ -24,6 +27,7 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
                 ctry = match.find('specimen/collectionlocation/country').text
                 out['collection_country'] = ctry
             else:
+
                 out['collection_country'] = "None"
 
             myid = match.find('ID').text
@@ -140,7 +144,49 @@ def taxon_data(obj):
             except TypeError:
                 print(">> Exception: No values for some of the keys.")
             obj['classification'] = "true"
-        return obj
+        if 'family' in obj:
+            return obj
+        else:
+            # The family name for this specimen is returned as `tax_id` because this samples is not `public` by BOLD
+            # when using the API.
+            # Try to get the tax_id from the webpage BIN.
+            return get_tax_id_from_web(obj)
+
+
+def get_tax_id_from_web(obj):
+    """Try to get the tax_id from the webpage BIN."""
+    logging.info('Trying to get the tax_id from the webpage Public_BIN.')
+
+    # get cart token
+    url = 'http://www.boldsystems.org/index.php/Public_BINSearch'
+    payload = {
+        'taxon': '',
+        'searchMenu': 'bins',
+        'query': obj['bold_id'],
+    }
+    r = requests.get(url, params=payload)
+    cart_token = re.search('= \'(general_.+)\';//', r.text).groups()[0]
+
+    # get actual data using the cart token
+    url = 'http://www.boldsystems.org/index.php/Public_Ajax_BinList'
+    payload = {
+        'offset': 0,
+        'limit': 100,
+        'query': obj['bold_id'],
+        'cartToken': cart_token,
+        'inc[]': 'ids::processid::' + obj['bold_id'],
+        'contextOp': 'AND',
+        '_': 1412165276887,
+    }
+    r = requests.get(url, params=payload)
+    soup = BeautifulSoup(r.text)
+    for i in soup.find_all('span'):
+        if 'Species' in i.get_text():
+            taxon = i.next_sibling.string.strip()
+            res = re.search('(\w+\s?\w*)\s\(', taxon)
+            if res:
+                obj['tax_id'] = res.groups()[0]
+            return obj
 
 
 def create_parser():

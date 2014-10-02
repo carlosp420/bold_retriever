@@ -167,10 +167,23 @@ class TestBoldRetriever(unittest.TestCase):
             'COX1_SPECIES',
         )
         result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
-        expected = "FIPSO166-14,ionx13,0.9796," \
-                   "Finland,animal,Psocoptera,Ins" \
-                   "ecta,Psocoptera,None"
+        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Insecta,Psocoptera,None"
         self.assertEqual(expected, result.strip())
+
+    def test_get_tax_id_from_web(self):
+        obj = {'division': 'animal',
+               'classification': 'true',
+               'seq': 'AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTCAACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCATTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA',
+               'similarity': '1',
+               'class': u'Insecta',
+               'collection_country': 'Finland',
+               'taxID': u'107',
+               'bold_id': 'NEUFI079-11',
+               'order': u'Neuroptera',
+               'id': 'OTU_99',
+               'tax_id': 'Neuroptera'}
+        results = br.get_tax_id_from_web(obj)
+        self.assertEqual('Hemerobius pini', results['tax_id'])
 
 
 if __name__ == "__main__":
