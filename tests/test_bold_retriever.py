@@ -167,7 +167,8 @@ class TestBoldRetriever(unittest.TestCase):
             'COX1_SPECIES',
         )
         result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
-        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Insecta,Psocoptera,None"
+        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Ins" \
+                   "ecta,Psocoptera,None"
         self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):

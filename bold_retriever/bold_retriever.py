@@ -59,7 +59,7 @@ def request_id(seq_object, id, db, debug=False):
     url = "http://boldsystems.org/index.php/Ids_xml"
     payload = {'db': db, 'sequence': str(seq_object)}
 
-    r = requests.get(url, params=payload)
+    r = get(url, payload)
     r_text = r.text
     if debug is True:
         r_text = []
@@ -88,7 +88,7 @@ def taxon_search(obj):
         'taxName': tax_id,
         'fuzzy': 'false',
     }
-    r = requests.get(url, params=payload)
+    r = get(url, payload)
     found_division = False
     if r.text != "":
         response = json.loads(r.text)
@@ -100,7 +100,7 @@ def taxon_search(obj):
                         found_division = True
                         return {'division': 'animal', 'taxID': k}
                 except:
-                    print "\n>> Error: " + str(r.text)
+                    logging.warning("Error: %s" % str(r.text))
 
             if not found_division:
                 for k, v in json.loads(r.text).items():
@@ -110,9 +110,7 @@ def taxon_search(obj):
                             found_division = True
                             return {'division': 'not animal', 'taxID': k}
                     except:
-                        out_msg = "\n>> Error got funny reply from BOLD: "
-                        out_msg += str(r.text)
-                        print(out_msg)
+                        logging.warning("Got funny reply from BOLD: " % str(r.text))
         else:
             return None
     return None
@@ -124,7 +122,7 @@ def taxon_data(obj):
     payload = {'taxId': this_tax_id, 'dataTypes': 'basic',
                'includeTree': 'true'
                }
-    req = requests.get(url, params=payload)
+    req = get(url, payload)
 
     # this is a "list" then
     if req.text == '[]':
@@ -142,13 +140,13 @@ def taxon_data(obj):
                 if val['tax_rank'] == 'family':
                     obj['family'] = val['taxon']
             except TypeError:
-                print(">> Exception: No values for some of the keys.")
+                logging.warning("Exception: No values for some of the keys.")
             obj['classification'] = "true"
         if 'family' in obj:
             return obj
         else:
-            # The family name for this specimen is returned as `tax_id` because this samples is not `public` by BOLD
-            # when using the API.
+            # The family name for this specimen is returned as `tax_id`
+            # because this samples is not `public` by BOLD when using the API.
             # Try to get the tax_id from the webpage BIN.
             return get_tax_id_from_web(obj)
 
@@ -164,7 +162,7 @@ def get_tax_id_from_web(obj):
         'searchMenu': 'bins',
         'query': obj['bold_id'],
     }
-    r = requests.get(url, params=payload)
+    r = get(url, payload)
     cart_token = re.search('= \'(general_.+)\';//', r.text).groups()[0]
 
     # get actual data using the cart token
@@ -178,7 +176,7 @@ def get_tax_id_from_web(obj):
         'contextOp': 'AND',
         '_': 1412165276887,
     }
-    r = requests.get(url, params=payload)
+    r = get(url, payload)
     soup = BeautifulSoup(r.text)
     for i in soup.find_all('span'):
         if 'Species' in i.get_text():
@@ -277,6 +275,17 @@ def generate_output_content_for_file(output_filename, fasta_file, db):
                 handle.write(out)
     print("Processed all sequences.")
     return "Processed all sequences."
+
+
+def get(url, payload):
+    """Wrapper function for requests.get so we can use fake requests when
+    writing unittests.
+    :param url:
+    :param params: payload
+    :return: response object from requests.get
+    """
+    r = requests.get(url, params=payload)
+    return r
 
 
 def get_args(args):
