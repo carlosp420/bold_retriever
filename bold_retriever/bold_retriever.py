@@ -107,10 +107,9 @@ def taxon_search(obj):
                     try:
                         if v['tax_division'] != 'Animals':
                             # this is the taxID
-                            found_division = True
                             return {'division': 'not animal', 'taxID': k}
                     except:
-                        logging.warning("Got funny reply from BOLD: " % str(r.text))
+                        logging.warning("Got funny reply from BOLD.")
         else:
             return None
     return None
@@ -181,7 +180,9 @@ def get_tax_id_from_web(obj):
     for i in soup.find_all('span'):
         if 'Species' in i.get_text():
             taxon = i.next_sibling.string.strip()
-            res = re.search('(\w+\s?\w*)\s\(', taxon)
+            taxon = re.sub("\([0-9]+\)", "", taxon)
+            taxon = re.sub(";", "", taxon)
+            res = re.search('^(\w+\s?\w*\.*)', taxon.strip())
             if res:
                 obj['tax_id'] = res.groups()[0]
             return obj

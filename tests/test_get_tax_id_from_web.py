@@ -33,9 +33,20 @@ class TestGetTaxIDFromWeb(unittest.TestCase):
     def test_when_scrapping_taxon_name_is_fail2(self):
         obj = {
             'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
-            }
+        }
         expected = {
             'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
-            }
+        }
+        result = br.get_tax_id_from_web(obj)
+        self.assertEqual(expected, result)
+
+    def test_when_scrapping_taxon_name_is_fail3(self):
+        obj = {
+            'bold_id': 'GRAFW1731-12',
+        }
+        expected = {
+            'bold_id': 'GRAFW1731-12',
+            'tax_id': 'Cryptinae sp.',
+        }
         result = br.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
