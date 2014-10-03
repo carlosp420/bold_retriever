@@ -185,6 +185,9 @@ def get_tax_id_from_web(obj):
             if res:
                 obj['tax_id'] = res.groups()[0]
             return obj
+    logging.info('The BOLD webpage does not contain Genus and Species names '
+                 'for BOLD record %s.' % obj['bold_id'] )
+    return obj
 
 
 def create_parser():
