@@ -133,7 +133,7 @@ class TestBoldRetriever(unittest.TestCase):
             'order': 'Lepidoptera',
             'family': 'Nymphalidae',
         }
-        expected = "Insecta,Lepidoptera,Nymphalidae\n"
+        expected = "Insecta,Lepidoptera,Nymphalidae"
         result = br.process_classification(obj)
         self.assertEqual(expected, result)
 
@@ -141,7 +141,7 @@ class TestBoldRetriever(unittest.TestCase):
         obj = {
             'classification': 'true',
         }
-        expected = "None,None,None\n"
+        expected = "None,None,None"
         result = br.process_classification(obj)
         self.assertEqual(expected, result)
 
@@ -149,7 +149,7 @@ class TestBoldRetriever(unittest.TestCase):
         obj = {
             'classification': 'false',
         }
-        expected = "None,None,None\n"
+        expected = "None,None,None"
         result = br.process_classification(obj)
         self.assertEqual(expected, result)
 
@@ -167,8 +167,7 @@ class TestBoldRetriever(unittest.TestCase):
             'COX1_SPECIES',
         )
         result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
-        expected = "FIPSO166-14,ionx13,0.9796,Finland,animal,Psocoptera,Ins" \
-                   "ecta,Psocoptera,None"
+        expected = "ionx13,FIPSO166-14,0.9796,animal,Insecta,Psocoptera,None,Psocoptera,Finland"
         self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):

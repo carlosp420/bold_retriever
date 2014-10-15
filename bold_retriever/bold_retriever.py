@@ -242,9 +242,8 @@ def process_classification(obj):
             out += obj['family']
         else:
             out += "None"
-        out += "\n"
     else:
-        out += "None,None,None\n"
+        out += "None,None,None"
     return out
 
 
@@ -262,14 +261,17 @@ def generate_output_content_for_file(output_filename, fasta_file, db):
                         continue
                     obj['taxID'] = r['taxID']
                     obj['division'] = r['division']
-                    # print "== obj", obj
+                    # print("== obj", obj)
                     obj = taxon_data(obj)
+
+                    out += obj['id'] + ","
                     out += obj['bold_id'] + ","
-                    out += obj['id'] + "," + obj['similarity'] + ","
-                    out += obj['collection_country'] + ","
+                    out += obj['similarity'] + ","
                     out += obj['division'] + ","
+                    out += process_classification(obj) + ","
                     out += obj['tax_id'] + ","
-                    out += process_classification(obj)
+                    out += obj['collection_country'] + "\n"
+
             with codecs.open(output_filename, "a", "utf-8") as handle:
                 handle.write(out)
         else:
