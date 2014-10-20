@@ -16,7 +16,7 @@ class TestGenerateContent(unittest.TestCase):
 
     def test_generate_content(self):
         # test_headers
-        expected = "seq_id,bold_id,similarity,division,class,order,family,taxon,collection_country\n"
+        expected = "seq_id,bold_id,similarity,division,class,order,family,species,collection_country\n"
         outputfile = br.create_output_file(self.filename)
         with open(outputfile, "r") as handle:
             results = handle.read()

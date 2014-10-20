@@ -215,7 +215,7 @@ def create_parser():
 
 def create_output_file(f):
     """Containing only column headers of the CSV file."""
-    output = "seq_id,bold_id,similarity,division,class,order,family,taxon,"
+    output = "seq_id,bold_id,similarity,division,class,order,family,species,"
     output += "collection_country\n"
 
     output_filename = f.strip() + "_output.csv"
