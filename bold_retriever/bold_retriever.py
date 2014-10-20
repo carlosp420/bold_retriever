@@ -203,10 +203,14 @@ def get_family_name_for_taxon(tax_id):
         result = get_parentname(taxon)
         return result
     else:
-        result = get_parentname(taxon)
-        if result.endswith("nae"):
-            result = get_parentname(taxon)
-            return result
+        # this might be a genus
+        genus_parent = get_parentname(taxon)
+        if genus_parent.endswith("nae"):
+            # this is a subfamily then do another search
+            subfamily_parent = get_parentname(genus_parent)
+            return subfamily_parent
+        else:
+            return genus_parent
 
 
 def get_parentname(taxon):

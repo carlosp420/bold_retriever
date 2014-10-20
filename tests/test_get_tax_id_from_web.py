@@ -25,7 +25,8 @@ class TestGetTaxIDFromWeb(unittest.TestCase):
         }
         expected = {
             'bold_id': 'NEUFI079-11',
-            'tax_id': 'Hemerobius pini',
+            'tax_id': u'Hemerobius pini',
+            'family': 'Hemerobiidae',
         }
         result = br.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
@@ -47,24 +48,36 @@ class TestGetTaxIDFromWeb(unittest.TestCase):
         expected = {
             'bold_id': 'GRAFW1731-12',
             'tax_id': 'Cryptinae sp.',
+            'family': 'Ichneumonidae',
         }
         result = br.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
 
     def test_get_family_name_for_taxon(self):
-        obj = {
-            'tax_id': 'Hemerobius pini'
-        }
-        expected = {
-            'tax_id': 'Hemerobius pini',
-            'family': 'Hemerobiinae',
-        }
-        result = br.get_family_name_for_taxon(obj['tax_id'])
+        tax_id = 'Hemerobiidae'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
         self.assertEqual(expected, result)
+
+        tax_id = 'Hemerobiinae'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
+        tax_id = 'Hemerobius pini'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
 
     def test_get_parentname(self):
         taxon = "Pardosa"
         expected = "Lycosidae"
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
+
+        taxon = "Hemerobiinae"
+        expected = "Hemerobiidae"
         result = br.get_parentname(taxon)
         self.assertEqual(expected, result)
 
