@@ -2,7 +2,8 @@
 
 History
 -------
-* v0.2.X: Reorganizing columns in output file.
+* v0.2.X: Reorganizing columns in output file. Querying the API for family
+          name of taxa.
 * v0.2.2: Killed bug taxon search.
 * v0.2.1: Killed bug in scraping web ``Public_BIN`` for species ID.
 * v0.2.0: Scraping web ``Public_BIN`` for species ID.
