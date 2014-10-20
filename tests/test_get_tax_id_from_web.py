@@ -67,3 +67,8 @@ class TestGetTaxIDFromWeb(unittest.TestCase):
         expected = "Lycosidae"
         result = br.get_parentname(taxon)
         self.assertEqual(expected, result)
+
+        taxon = "Pardosaaaaaaaaaaa"
+        expected = None
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
