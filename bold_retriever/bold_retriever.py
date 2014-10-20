@@ -185,10 +185,42 @@ def get_tax_id_from_web(obj):
             res = re.search('^(\w+\s?\w*\.*)', taxon.strip())
             if res:
                 obj['tax_id'] = res.groups()[0]
+                obj['family'] = get_family_name_for_taxon(obj['tax_id'])
             return obj
     logging.info('The BOLD webpage does not contain Genus and Species names '
                  'for BOLD record %s.' % obj['bold_id'] )
     return obj
+
+
+def get_family_name_for_taxon(tax_id):
+    """Send genus name and get family name from the `parentname` result form
+    the API."""
+    taxon = tax_id.split(" ")[0]
+    if taxon.endswith("dae"):
+        # This is already a family name
+        return taxon
+    elif taxon.endswith("nae"):
+        result = get_parentname(taxon)
+        return result
+    else:
+        result = get_parentname(taxon)
+        if result.endswith("nae"):
+            result = get_parentname(taxon)
+            return result
+
+
+def get_parentname(taxon):
+    url = 'http://www.boldsystems.org/index.php/API_Tax/TaxonSearch'
+    params = {'taxName': taxon}
+    req = get(url, params)
+
+    if req.text == '[]':
+        return None
+    elif isinstance(req.text, basestring):
+        items = json.loads(req.text).items()
+        for key, val in items:
+            if val['parentname']:
+                return val['parentname']
 
 
 def create_parser():

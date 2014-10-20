@@ -50,3 +50,20 @@ class TestGetTaxIDFromWeb(unittest.TestCase):
         }
         result = br.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
+
+    def test_get_family_name_for_taxon(self):
+        obj = {
+            'tax_id': 'Hemerobius pini'
+        }
+        expected = {
+            'tax_id': 'Hemerobius pini',
+            'family': 'Hemerobiinae',
+        }
+        result = br.get_family_name_for_taxon(obj['tax_id'])
+        self.assertEqual(expected, result)
+
+    def test_get_parentname(self):
+        taxon = "Pardosa"
+        expected = "Lycosidae"
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
