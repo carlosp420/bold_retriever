@@ -15,15 +15,24 @@ class TestGenerateContent(unittest.TestCase):
         self.output_filename = self.filename + "_output.csv"
 
     def test_generate_content(self):
+        # test_headers
+        expected = "seq_id,bold_id,similarity,division,class,order,family,taxon,collection_country\n"
+        outputfile = br.create_output_file(self.filename)
+        with open(outputfile, "r") as handle:
+            results = handle.read()
+        self.assertEqual(expected, results)
+
         results = br.generate_output_content_for_file(self.output_filename,
                                                       self.filename,
                                                       self.db)
         expected = 'Processed all sequences.'
         self.assertEqual(expected, results)
 
-        lines = open(self.output_filename, "r").readlines()[0]
+        with open(self.output_filename, "r") as handle:
+            lines = handle.readlines()[1]
         expected = 'nohit,OTU_50'
         self.assertTrue(lines.startswith(expected))
+
 
 
 if __name__ == "__main__":
