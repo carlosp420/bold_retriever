@@ -3,12 +3,19 @@ from argparse import RawTextHelpFormatter
 import codecs
 import json
 import logging
+from pprint import pformat
 import re
+import urllib
 import xml.etree.ElementTree as ET
 
 from Bio import SeqIO
 from bs4 import BeautifulSoup
 import requests
+from twisted.internet.defer import DeferredSemaphore, gatherResults
+from twisted.web.client import Agent, readBody
+from twisted.internet import reactor
+from twisted.web.http_headers import Headers
+
 
 
 def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
@@ -227,28 +234,6 @@ def get_parentname(taxon):
                 return val['parentname']
 
 
-def create_parser():
-    description = "send seqs to BOLD Systems API and retrieve results"
-    parser = argparse.ArgumentParser(description=description,
-                                     formatter_class=RawTextHelpFormatter,
-                                     )
-    parser.add_argument('-f', '--file', action='store', help='Fasta filename',
-                        required=True, dest='fasta_file',
-                        )
-    parser.add_argument('-db', '--database', action='store',
-                        help='Choose a BOLD database. Enter one option.',
-                        choices=[
-                            'COX1_SPECIES',
-                            'COX1',
-                            'COX1_SPECIES_PUBLIC',
-                            'COX1_L640bp',
-                        ],
-                        required=True,
-                        dest='db',
-                        )
-    return parser
-
-
 def create_output_file(f):
     """Containing only column headers of the CSV file."""
     output = "seq_id,bold_id,similarity,division,class,order,family,species,"
@@ -282,39 +267,56 @@ def process_classification(obj):
         out += "None,None,None"
     return out
 
+def cbRequest(response):
+    print 'Response version:', response.version
+    print 'Response code:', response.code
+    print 'Response phrase:', response.phrase
+    print 'Response headers:'
+    print pformat(list(response.headers.getAllRawHeaders()))
+    d = readBody(response)
+    d.addCallback(cbBody)
+    return d
+
+def cbBody(body):
+    print 'Response body:'
+    print body
+
+def async(seq_record, db):
+    print("Processing sequence for %s" % str(seq_record.id))
+
+    domain = "http://boldsystems.org/index.php/Ids_xml"
+    payload = {'db': db, 'sequence': str(seq_record.seq)}
+    url = domain + '?' + urllib.urlencode(payload)
+
+    agent = Agent(reactor)
+    d = agent.request(
+        'GET', url,
+        Headers({'User-Agent': ['bold_retriever']}),
+        None,
+    )
+    d.addCallback(cbRequest)
+
+    def cbFinished(ignored):
+        print("Finishing job", seq_record.id)
+    d.addCallback(cbFinished)
+    return d
+
+
 
 def generate_output_content_for_file(output_filename, fasta_file, db):
+    """
+    Use Twisted.
+    """
+    sem = DeferredSemaphore(50)
+    jobs = []
+    append = jobs.append
+
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
-        print("Processing sequence for %s" % str(seq_record.id))
-        out = ""
-        all_ids = request_id(seq_record.seq, seq_record.id, db)
-        if all_ids is not None:
-            for obj in all_ids:
-                if 'tax_id' in obj:
-                    r = taxon_search(obj)
+        append(sem.run(async, seq_record, db))
 
-                    if r is None:
-                        continue
-                    obj['taxID'] = r['taxID']
-                    obj['division'] = r['division']
-                    # print("== obj", obj)
-                    obj = taxon_data(obj)
-
-                    out += obj['id'] + ","
-                    out += obj['bold_id'] + ","
-                    out += obj['similarity'] + ","
-                    out += obj['division'] + ","
-                    out += process_classification(obj) + ","
-                    out += obj['tax_id'] + ","
-                    out += obj['collection_country'] + "\n"
-
-            with codecs.open(output_filename, "a", "utf-8") as handle:
-                handle.write(out)
-        else:
-            out = "nohit," + str(seq_record.id) + ","
-            out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
-            with codecs.open(output_filename, "a", "utf-8") as handle:
-                handle.write(out)
+    d = gatherResults(jobs)
+    d.addCallback(lambda ignored: reactor.stop())
+    reactor.run()
     print("Processed all sequences.")
     return "Processed all sequences."
 
@@ -340,6 +342,28 @@ def get_started(args):
     fasta_file, db = get_args(args)
     output_filename = create_output_file(fasta_file)
     generate_output_content_for_file(output_filename, fasta_file, db)
+
+
+def create_parser():
+    description = "send seqs to BOLD Systems API and retrieve results"
+    parser = argparse.ArgumentParser(description=description,
+                                     formatter_class=RawTextHelpFormatter,
+                                     )
+    parser.add_argument('-f', '--file', action='store', help='Fasta filename',
+                        required=True, dest='fasta_file',
+                        )
+    parser.add_argument('-db', '--database', action='store',
+                        help='Choose a BOLD database. Enter one option.',
+                        choices=[
+                            'COX1_SPECIES',
+                            'COX1',
+                            'COX1_SPECIES_PUBLIC',
+                            'COX1_L640bp',
+                            ],
+                        required=True,
+                        dest='db',
+                        )
+    return parser
 
 
 def main():
