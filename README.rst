@@ -16,7 +16,7 @@ Run this way
     cd $USERAPPL
     git clone https://github.com/carlosp420/bold_retriever.git
 
-* install dependencies::
+* install dependencies (python2.7)::
 
     cd bold_retriever
     module load biopython-env
