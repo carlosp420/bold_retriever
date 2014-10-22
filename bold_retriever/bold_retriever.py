@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 import requests
 from twisted.internet.defer import DeferredSemaphore, gatherResults
 from twisted.web.client import Agent, readBody
-from twisted.internet import reactor
+from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
 import engine
@@ -60,7 +60,8 @@ def cbBody(body, seq_record, output_filename):
             all_ids,
             taxon_list,
         )
-        engine.generate_output_content(all_ids, output_filename, seq_record)
+        command = [(engine.generate_output_content, [all_ids, output_filename, seq_record], {})]
+        threads.callMultipleInThread(command)
 
 
 def async(seq_record, db, output_filename):
