@@ -6,7 +6,6 @@ import logging
 from pprint import pformat
 import re
 import urllib
-import xml.etree.ElementTree as ET
 
 from Bio import SeqIO
 from bs4 import BeautifulSoup
@@ -16,72 +15,7 @@ from twisted.web.client import Agent, readBody
 from twisted.internet import reactor
 from twisted.web.http_headers import Headers
 
-
-
-def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
-    try:
-        root = ET.fromstring(request)
-        for match in root.findall('match'):
-            out = dict()
-            out['seq'] = str(seq_object)
-            out['id'] = str(id)
-            similarity = match.find('similarity').text
-            out['similarity'] = similarity
-            tax_id = match.find('taxonomicidentification').text
-            out['tax_id'] = tax_id
-
-            if match.find('specimen/collectionlocation/country').text:
-                ctry = match.find('specimen/collectionlocation/country').text
-                out['collection_country'] = ctry
-            else:
-
-                out['collection_country'] = "None"
-
-            myid = match.find('ID').text
-            out['bold_id'] = myid
-            if not out['tax_id'] in taxon_list:
-                taxon_list.append(out['tax_id'])
-                all_ids.append(out)
-        return all_ids, taxon_list
-    except ET.ParseError as e:
-        print "\n>> Error got malformed XML from BOLD: " + str(e)
-        return all_ids, taxon_list
-    except TypeError as e:
-        print "\n>> Error got malformed XML from BOLD: " + str(e)
-        return all_ids, taxon_list
-
-
-def request_id(seq_object, id, db, debug=False):
-    """
-    Sends a sequence to BOLD REST API for identification using a database
-    specified by the user.
-
-    :param seq_object: sequence as string
-    :param id: sequence id as string
-    :param db: BOLD database specified by user as string
-    :return: two lists of diciontaries with some identification info
-    """
-    all_ids = []
-    taxon_list = []
-    url = "http://boldsystems.org/index.php/Ids_xml"
-    payload = {'db': db, 'sequence': str(seq_object)}
-
-    r = get(url, payload)
-    r_text = r.text
-    if debug is True:
-        r_text = []
-
-    if isinstance(r_text, basestring):
-        all_ids, taxon_list = parse_bold_xml(r_text, seq_object, id, all_ids,
-                                             taxon_list)
-        if all_ids is not None and len(all_ids) > 0:
-            # for i in all_ids:
-            # print i['tax_id'], i['similarity']
-            return all_ids
-        else:
-            return None
-    else:
-        return None
+import engine
 
 
 def taxon_search(obj):
@@ -267,19 +201,40 @@ def process_classification(obj):
         out += "None,None,None"
     return out
 
-def cbRequest(response):
+def cbRequest(response, seq_record):
     print 'Response version:', response.version
     print 'Response code:', response.code
     print 'Response phrase:', response.phrase
     print 'Response headers:'
     print pformat(list(response.headers.getAllRawHeaders()))
     d = readBody(response)
-    d.addCallback(cbBody)
+    d.addCallback(cbBody, seq_record)
     return d
 
-def cbBody(body):
+
+def cbBody(body, seq_record):
     print 'Response body:'
-    print body
+
+    all_ids = []
+    taxon_list = []
+    if isinstance(body, basestring):
+        all_ids, taxon_list = engine.parse_bold_xml(
+            body,
+            seq_record.seq,
+            seq_record.id,
+            all_ids,
+            taxon_list,
+        )
+        if all_ids is not None and len(all_ids) > 0:
+            # for i in all_ids:
+            # print i['tax_id'], i['similarity']
+            print(all_ids)
+            return all_ids
+        else:
+            return None
+    else:
+        return None
+
 
 def async(seq_record, db):
     print("Processing sequence for %s" % str(seq_record.id))
@@ -294,7 +249,7 @@ def async(seq_record, db):
         Headers({'User-Agent': ['bold_retriever']}),
         None,
     )
-    d.addCallback(cbRequest)
+    d.addCallback(cbRequest, seq_record=seq_record)
 
     def cbFinished(ignored):
         print("Finishing job", seq_record.id)
