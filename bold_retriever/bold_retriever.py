@@ -1,25 +1,16 @@
 import argparse
 from argparse import RawTextHelpFormatter
 import codecs
-import json
-import logging
-from pprint import pformat
-import re
 import urllib
 
 from Bio import SeqIO
-from bs4 import BeautifulSoup
-import requests
 from twisted.internet.defer import DeferredSemaphore, gatherResults
 from twisted.web.client import Agent, readBody
 from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
 import engine
-
-
-
-
+import utils
 
 
 def create_output_file(f):
@@ -34,22 +25,13 @@ def create_output_file(f):
     return output_filename
 
 
-
-
 def cbRequest(response, seq_record, output_filename):
-    print 'Response version:', response.version
-    print 'Response code:', response.code
-    print 'Response phrase:', response.phrase
-    print 'Response headers:'
-    print pformat(list(response.headers.getAllRawHeaders()))
     d = readBody(response)
     d.addCallback(cbBody, seq_record, output_filename)
     return d
 
 
 def cbBody(body, seq_record, output_filename):
-    print 'Response body:'
-
     all_ids = []
     taxon_list = []
     if isinstance(body, basestring):
@@ -85,7 +67,7 @@ def async(seq_record, db, output_filename):
     return d
 
 
-
+#@utils.do_cprofile
 def generate_jobs(output_filename, fasta_file, db):
     """
     Use Twisted.
