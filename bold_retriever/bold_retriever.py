@@ -1,28 +1,14 @@
 import argparse
 from argparse import RawTextHelpFormatter
-import codecs
 import urllib
 
 from Bio import SeqIO
+from twisted.internet import reactor, threads
 from twisted.internet.defer import DeferredSemaphore, gatherResults
 from twisted.web.client import Agent, readBody
-from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
 import engine
-import utils
-
-
-def create_output_file(f):
-    """Containing only column headers of the CSV file."""
-    output = "seq_id,bold_id,similarity,division,class,order,family,species,"
-    output += "collection_country\n"
-
-    output_filename = f.strip() + "_output.csv"
-    myfile = codecs.open(output_filename, "w", "utf-8")
-    myfile.write(output)
-    myfile.close()
-    return output_filename
 
 
 def cbRequest(response, seq_record, output_filename):
@@ -67,10 +53,9 @@ def async(seq_record, db, output_filename):
     return d
 
 
-#@utils.do_cprofile
 def generate_jobs(output_filename, fasta_file, db):
     """
-    Use Twisted.
+    Using Twisted to execute asynchronous calls to BOLD API.
     """
     sem = DeferredSemaphore(50)
     jobs = []
@@ -86,8 +71,6 @@ def generate_jobs(output_filename, fasta_file, db):
     return "Processed all sequences."
 
 
-
-
 def get_args(args):
     db = args.db
     f = args.fasta_file
@@ -96,7 +79,7 @@ def get_args(args):
 
 def get_started(args):
     fasta_file, db = get_args(args)
-    output_filename = create_output_file(fasta_file)
+    output_filename = engine.create_output_file(fasta_file)
     generate_jobs(output_filename, fasta_file, db)
 
 
