@@ -1,12 +1,5 @@
-import codecs
-import os
-
-from Bio.SeqRecord import SeqRecord
-from Bio.Seq import Seq
-import requests
 from twisted.trial import unittest
-from twisted.internet import reactor, defer, threads
-from unipath import Path
+from twisted.internet import reactor
 
 from bold_retriever import engine
 
