@@ -4,9 +4,9 @@ import os
 from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import requests
-import responses
 from twisted.trial import unittest
 from twisted.internet import reactor, defer
+from unipath import Path
 
 from bold_retriever import engine
 
@@ -130,34 +130,6 @@ class TestBoldRetriever(unittest.TestCase):
         engine.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
-    def test_process_classification(self):
-        obj = {
-            'classification': 'true',
-            'class': 'Insecta',
-            'order': 'Lepidoptera',
-            'family': 'Nymphalidae',
-        }
-        expected = "Insecta,Lepidoptera,Nymphalidae"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-
-    def test_process_classification_class_none(self):
-        obj = {
-            'classification': 'true',
-        }
-        expected = "None,None,None"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-
-    def test_process_classification_false(self):
-        obj = {
-            'classification': 'false',
-        }
-        expected = "None,None,None"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-
-    @responses.activate
     def test_generate_output_content(self):
         output_filename = 'ionx13.fas_output.csv'
         if os.path.isfile(output_filename):
@@ -168,25 +140,9 @@ class TestBoldRetriever(unittest.TestCase):
                   'ATTATAATTttttttATAGTAATACCTATTATAATT')
         seq_record = SeqRecord(seq, id="ionx13")
 
-        with open('Bold_Retriever/response1.xml', 'r') as f:
-            body = f.read()
-        responses.add(responses.GET,
-                      "http://boldsystems.org/index.php/Ids_xml",
-                      body=body,
-                      params={
-                          'db': 'COX1_L640bp',
-                          'sequence': seq_record.seq,
-                          },
-                      content_type='application/xml',
-                      )
-        r = requests.get(
-            url="http://boldsystems.org/index.php/Ids_xml",
-            params={
-                'db': 'COX1_L640bp',
-                'sequence': seq_record.seq,
-                },
-        )
-        request = r.text
+        res_file = Path(__file__).absolute().ancestor(1) + "/Bold_Retriever/response1.xml"
+        with open(res_file, 'r') as f:
+            request = f.read()
         all_ids, taxon_list = engine.parse_bold_xml(
             request,
             str(seq_record.seq),
@@ -197,17 +153,20 @@ class TestBoldRetriever(unittest.TestCase):
             import sys
             sys.stderr.write(str(failure))
 
+        def check_result():
+            result = codecs.open(output_filename, "r", "utf-8").readlines()[1][:6]
+            expected = "ionx13"
+            self.assertEqual(expected, result.strip())
+
         engine.create_output_file(output_filename.replace("_output.csv", ""))
         d = defer.Deferred()
         d.addCallback(engine.generate_output_content, all_ids=all_ids,
                             output_filename=output_filename, seq_record=seq_record)
+        d.addCallback(check_result)
         d.addErrback(printError)
         reactor.callLater(12, reactor.stop)
         reactor.run()
 
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[1][:6]
-        expected = "ionx13"
-        self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):
         obj = {'division': 'animal',
