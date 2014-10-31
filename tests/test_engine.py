@@ -5,13 +5,13 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Seq import Seq
 import requests
 from twisted.trial import unittest
-from twisted.internet import reactor, defer
+from twisted.internet import reactor, defer, threads
 from unipath import Path
 
 from bold_retriever import engine
 
 
-class TestBoldRetriever(unittest.TestCase):
+class TestEngine(unittest.TestCase):
 
     def setUp(self):
         self.db = "COX1_L640bp"
@@ -42,3 +42,102 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "None,None,None"
         result = engine.process_classification(obj)
         self.assertEqual(expected, result)
+    def test_when_scrapping_taxon_name_is_fail(self):
+        obj = {
+            'bold_id': 'GMGRE1022-13',
+        }
+        expected = {
+            'bold_id': 'GMGRE1022-13',
+        }
+        result = br.get_tax_id_from_web(obj)
+        self.assertEqual(expected, result)
+
+    def test_when_scrapping_taxon_name_is_not_fail(self):
+        obj = {
+            'bold_id': 'NEUFI079-11',
+        }
+        expected = {
+            'bold_id': 'NEUFI079-11',
+            'tax_id': u'Hemerobius pini',
+            'family': 'Hemerobiidae',
+        }
+        result = br.get_tax_id_from_web(obj)
+        self.assertEqual(expected, result)
+
+    def test_when_scrapping_taxon_name_is_fail2(self):
+        obj = {
+            'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
+        }
+        expected = {
+            'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
+        }
+        result = br.get_tax_id_from_web(obj)
+        self.assertEqual(expected, result)
+
+    def test_when_scrapping_taxon_name_is_fail3(self):
+        obj = {
+            'bold_id': 'GRAFW1731-12',
+        }
+        expected = {
+            'bold_id': 'GRAFW1731-12',
+            'tax_id': 'Cryptinae sp.',
+            'family': 'Ichneumonidae',
+        }
+        result = br.get_tax_id_from_web(obj)
+        self.assertEqual(expected, result)
+
+    def test_get_family_name_for_taxon(self):
+        tax_id = 'Hemerobiidae'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
+        tax_id = 'Hemerobiinae'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
+        tax_id = 'Hemerobius pini'
+        expected = 'Hemerobiidae'
+        result = br.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
+
+    def test_get_parentname(self):
+        taxon = "Pardosa"
+        expected = "Lycosidae"
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
+
+        taxon = "Hemerobiinae"
+        expected = "Hemerobiidae"
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
+
+        taxon = "Pardosaaaaaaaaaaa"
+        expected = None
+        result = br.get_parentname(taxon)
+        self.assertEqual(expected, result)
+
+    def test_get_family_name_for_taxon(self):
+        tax_id = 'Hemerobiidae'
+        expected = 'Hemerobiidae'
+        try:
+            result = engine.get_family_name_for_taxon(tax_id)
+        except Error, exc:
+            print(exc)
+        reactor.callFromThread(reactor.stop)
+        reactor.run()
+        self.assertEqual(expected, result)
+
+        """
+        tax_id = 'Hemerobiinae'
+        expected = 'Hemerobiidae'
+        result = engine.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+
+        tax_id = 'Hemerobius pini'
+        expected = 'Hemerobiidae'
+        result = engine.get_family_name_for_taxon(tax_id)
+        self.assertEqual(expected, result)
+        """
