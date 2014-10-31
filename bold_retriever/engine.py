@@ -255,6 +255,7 @@ def process_classification(obj):
 
 
 def generate_output_content(all_ids, output_filename, seq_record):
+    print(">>> function ggenerate output content is called")
     out = ""
     if all_ids is not None:
         for obj in all_ids:
@@ -277,9 +278,11 @@ def generate_output_content(all_ids, output_filename, seq_record):
                 out += '\n'
 
         with codecs.open(output_filename, "a", "utf-8") as handle:
+            print(">>Writing to file")
             handle.write(out)
     else:
         out = "nohit," + str(seq_record.id) + ","
         out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
         with codecs.open(output_filename, "a", "utf-8") as handle:
+            print(">>Writing to file")
             handle.write(out)

@@ -103,14 +103,17 @@ class TestEngine(unittest.TestCase):
         threads.callMultipleInThread(commands)
         reactor.run()
 
+    def test_get_family_name_for_taxon3(self):
+        def this_run(tax_id):
+            result = engine.get_family_name_for_taxon(tax_id)
+            self.assertEqual(expected, result)
 
-
-        """
         tax_id = 'Hemerobius pini'
         expected = 'Hemerobiidae'
-        result = engine.get_family_name_for_taxon(tax_id)
-        self.assertEqual(expected, result)
-        """
+        commands = [(this_run, [tax_id], {})]
+        threads.callMultipleInThread(commands)
+        reactor.run()
+
 
     def test_process_classification(self):
         obj = {
