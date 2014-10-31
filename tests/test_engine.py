@@ -1,5 +1,6 @@
 from twisted.trial import unittest
-from twisted.internet import reactor
+from twisted.internet import reactor, threads
+from twisted.web.error import Error
 
 from bold_retriever import engine
 
@@ -9,43 +10,21 @@ class TestEngine(unittest.TestCase):
     def setUp(self):
         self.db = "COX1_L640bp"
 
-    def test_process_classification(self):
-        obj = {
-            'classification': 'true',
-            'class': 'Insecta',
-            'order': 'Lepidoptera',
-            'family': 'Nymphalidae',
-        }
-        expected = "Insecta,Lepidoptera,Nymphalidae"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-
-    def test_process_classification_class_none(self):
-        obj = {
-            'classification': 'true',
-        }
-        expected = "None,None,None"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-
-    def test_process_classification_false(self):
-        obj = {
-            'classification': 'false',
-        }
-        expected = "None,None,None"
-        result = engine.process_classification(obj)
-        self.assertEqual(expected, result)
-    def test_when_scrapping_taxon_name_is_fail(self):
+    def test_get_tax_id_from_web_1(self):
+        # test_when_scrapping_taxon_name_is_fail
         obj = {
             'bold_id': 'GMGRE1022-13',
         }
         expected = {
             'bold_id': 'GMGRE1022-13',
         }
-        result = br.get_tax_id_from_web(obj)
+        result = engine.get_tax_id_from_web(obj)
+        reactor.callFromThread(reactor.stop)
+        reactor.run()
         self.assertEqual(expected, result)
 
-    def test_when_scrapping_taxon_name_is_not_fail(self):
+    def test_get_tax_id_from_web_2(self):
+        # test_when_scrapping_taxon_name_is_not_fail
         obj = {
             'bold_id': 'NEUFI079-11',
         }
@@ -54,20 +33,27 @@ class TestEngine(unittest.TestCase):
             'tax_id': u'Hemerobius pini',
             'family': 'Hemerobiidae',
         }
-        result = br.get_tax_id_from_web(obj)
+        try:
+            result = engine.get_tax_id_from_web(obj)
+        except Error, exc:
+            print(exc)
+        reactor.callFromThread(reactor.stop)
+        reactor.run()
         self.assertEqual(expected, result)
 
-    def test_when_scrapping_taxon_name_is_fail2(self):
+    def test_get_tax_id_from_web3(self):
+        # test_when_scrapping_taxon_name_is_fail
         obj = {
             'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
         }
         expected = {
             'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
         }
-        result = br.get_tax_id_from_web(obj)
+        result = engine.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
 
-    def test_when_scrapping_taxon_name_is_fail3(self):
+    def test_get_tax_id_from_web4(self):
+        # test_when_scrapping_taxon_name_is_fail
         obj = {
             'bold_id': 'GRAFW1731-12',
         }
@@ -76,25 +62,8 @@ class TestEngine(unittest.TestCase):
             'tax_id': 'Cryptinae sp.',
             'family': 'Ichneumonidae',
         }
-        result = br.get_tax_id_from_web(obj)
+        result = engine.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
-
-    def test_get_family_name_for_taxon(self):
-        tax_id = 'Hemerobiidae'
-        expected = 'Hemerobiidae'
-        result = br.get_family_name_for_taxon(tax_id)
-        self.assertEqual(expected, result)
-
-        tax_id = 'Hemerobiinae'
-        expected = 'Hemerobiidae'
-        result = br.get_family_name_for_taxon(tax_id)
-        self.assertEqual(expected, result)
-
-        tax_id = 'Hemerobius pini'
-        expected = 'Hemerobiidae'
-        result = br.get_family_name_for_taxon(tax_id)
-        self.assertEqual(expected, result)
-
 
     def test_get_parentname(self):
         taxon = "Pardosa"
@@ -112,7 +81,7 @@ class TestEngine(unittest.TestCase):
         result = br.get_parentname(taxon)
         self.assertEqual(expected, result)
 
-    def test_get_family_name_for_taxon(self):
+    def test_get_family_name_for_taxon1(self):
         tax_id = 'Hemerobiidae'
         expected = 'Hemerobiidae'
         try:
@@ -123,14 +92,49 @@ class TestEngine(unittest.TestCase):
         reactor.run()
         self.assertEqual(expected, result)
 
-        """
+    def test_get_family_name_for_taxon2(self):
+        def this_run(tax_id):
+            result = engine.get_family_name_for_taxon(tax_id)
+            self.assertEqual(expected, result)
+
         tax_id = 'Hemerobiinae'
         expected = 'Hemerobiidae'
-        result = engine.get_family_name_for_taxon(tax_id)
-        self.assertEqual(expected, result)
+        commands = [(this_run, [tax_id], {})]
+        threads.callMultipleInThread(commands)
+        reactor.run()
 
+
+
+        """
         tax_id = 'Hemerobius pini'
         expected = 'Hemerobiidae'
         result = engine.get_family_name_for_taxon(tax_id)
         self.assertEqual(expected, result)
         """
+
+    def test_process_classification(self):
+        obj = {
+            'classification': 'true',
+            'class': 'Insecta',
+            'order': 'Lepidoptera',
+            'family': 'Nymphalidae',
+            }
+        expected = "Insecta,Lepidoptera,Nymphalidae"
+        result = engine.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_process_classification_class_none(self):
+        obj = {
+            'classification': 'true',
+            }
+        expected = "None,None,None"
+        result = engine.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_process_classification_false(self):
+        obj = {
+            'classification': 'false',
+            }
+        expected = "None,None,None"
+        result = engine.process_classification(obj)
+        self.assertEqual(expected, result)
