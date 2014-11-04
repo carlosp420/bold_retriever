@@ -1,6 +1,9 @@
 from twisted.trial import unittest
-from twisted.internet import reactor, threads
+from twisted.internet import reactor, threads, task
 from twisted.web.error import Error
+from threading import Thread
+from twisted.internet.defer import DeferredSemaphore, gatherResults, execute
+from crochet import setup, run_in_reactor
 
 from bold_retriever import engine
 
@@ -19,10 +22,9 @@ class TestEngine(unittest.TestCase):
             'bold_id': 'GMGRE1022-13',
         }
         result = engine.get_tax_id_from_web(obj)
-        reactor.callFromThread(reactor.stop)
-        reactor.run()
         self.assertEqual(expected, result)
 
+    """
     def test_get_tax_id_from_web_2(self):
         # test_when_scrapping_taxon_name_is_not_fail
         obj = {
@@ -40,8 +42,9 @@ class TestEngine(unittest.TestCase):
         reactor.callFromThread(reactor.stop)
         reactor.run()
         self.assertEqual(expected, result)
+    """
 
-    def test_get_tax_id_from_web3(self):
+    def test_get_tax_id_from_web_3(self):
         # test_when_scrapping_taxon_name_is_fail
         obj = {
             'bold_id': 'NEUFI079-11aaaaaaaaaaaaaaaaaaaaaa',
@@ -52,7 +55,8 @@ class TestEngine(unittest.TestCase):
         result = engine.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
 
-    def test_get_tax_id_from_web4(self):
+    """
+    def test_get_tax_id_from_web_4(self):
         # test_when_scrapping_taxon_name_is_fail
         obj = {
             'bold_id': 'GRAFW1731-12',
@@ -64,21 +68,22 @@ class TestEngine(unittest.TestCase):
         }
         result = engine.get_tax_id_from_web(obj)
         self.assertEqual(expected, result)
+    """
 
     def test_get_parentname(self):
         taxon = "Pardosa"
         expected = "Lycosidae"
-        result = br.get_parentname(taxon)
+        result = engine.get_parentname(taxon)
         self.assertEqual(expected, result)
 
         taxon = "Hemerobiinae"
         expected = "Hemerobiidae"
-        result = br.get_parentname(taxon)
+        result = engine.get_parentname(taxon)
         self.assertEqual(expected, result)
 
         taxon = "Pardosaaaaaaaaaaa"
         expected = None
-        result = br.get_parentname(taxon)
+        result = engine.get_parentname(taxon)
         self.assertEqual(expected, result)
 
     def test_get_family_name_for_taxon1(self):
@@ -92,16 +97,20 @@ class TestEngine(unittest.TestCase):
         reactor.run()
         self.assertEqual(expected, result)
 
+    """
     def test_get_family_name_for_taxon2(self):
-        def this_run(tax_id):
+        tax_id='Hemerobiinae'
+        expected='Hemerobiidae'
+        try:
             result = engine.get_family_name_for_taxon(tax_id)
-            self.assertEqual(expected, result)
-
-        tax_id = 'Hemerobiinae'
-        expected = 'Hemerobiidae'
-        commands = [(this_run, [tax_id], {})]
-        threads.callMultipleInThread(commands)
+        except Error, exc:
+            print(exc)
+        reactor.callFromThread(reactor.stop)
         reactor.run()
+        self.assertEqual(expected, result)
+
+        def tearDown(self):
+            print("teardown()")
 
     def test_get_family_name_for_taxon3(self):
         def this_run(tax_id):
@@ -113,6 +122,7 @@ class TestEngine(unittest.TestCase):
         commands = [(this_run, [tax_id], {})]
         threads.callMultipleInThread(commands)
         reactor.run()
+    """
 
 
     def test_process_classification(self):
