@@ -142,6 +142,7 @@ def get_tax_id_from_web(obj):
             if res:
                 obj['tax_id'] = res.groups()[0]
                 obj['family'] = get_family_name_for_taxon(obj['tax_id'])
+                reactor.callFromThread(reactor.stop)
             return obj
     logging.info('The BOLD webpage does not contain Genus and Species names '
                  'for BOLD record %s.' % obj['bold_id'] )
@@ -161,7 +162,7 @@ def get_family_name_for_taxon(tax_id):
             result = threads.blockingCallFromThread(reactor, get_parentname, taxon)
         except Error, exc:
             print(exc)
-        reactor.callFromThread(reactor.stop)
+        # reactor.callFromThread(reactor.stop)
         return result
     else:
         # this might be a genus
@@ -170,7 +171,7 @@ def get_family_name_for_taxon(tax_id):
             genus_parent = threads.blockingCallFromThread(reactor, get_parentname, taxon)
         except Error, exc:
             print(exc)
-        reactor.callFromThread(reactor.stop)
+        # reactor.callFromThread(reactor.stop)
 
         if genus_parent.endswith("nae"):
             # this is a subfamily then do another search
@@ -179,7 +180,7 @@ def get_family_name_for_taxon(tax_id):
                 subfamily_parent = threads.blockingCallFromThread(reactor, get_parentname, genus_parent)
             except Error, exc:
                 print(exc)
-            reactor.callFromThread(reactor.stop)
+            # reactor.callFromThread(reactor.stop)
             return subfamily_parent
         else:
             return genus_parent
