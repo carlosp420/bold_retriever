@@ -1,3 +1,4 @@
+import glob
 import os
 import subprocess
 import unittest
@@ -64,7 +65,7 @@ class CmdlineTest(unittest.TestCase):
         self.assertTrue(os.path.isfile(result_file))
 
     def test_insecta(self):
-        """It should pass despite returning empty list for classification."""
+        """It should pass despite returning empty list for classification, insecta."""
         test_folder = os.path.abspath(os.path.dirname(__file__))
         input_file = os.path.join(test_folder, 'otu_insecta.fas')
         args = self.parser.parse_args(['-f', input_file, '-db',
@@ -72,3 +73,8 @@ class CmdlineTest(unittest.TestCase):
         br.get_started(args)
         result_file = os.path.join(test_folder, 'otu_insecta.fas_output.csv')
         self.assertTrue(os.path.isfile(result_file))
+
+    def tearDown(self):
+        test_folder = os.path.abspath(os.path.dirname(__file__))
+        for i in glob.glob(test_folder + "/*csv"):
+            os.remove(i)
