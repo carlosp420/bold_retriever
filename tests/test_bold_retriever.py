@@ -37,7 +37,7 @@ class TestBoldRetriever(unittest.TestCase):
 
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+                                        taxon_list)[1]
         expected = ['Diptera', 'Culicidae', 'Ochlerotatus impiger']
         self.assertEqual(results, expected)
 
@@ -54,7 +54,7 @@ class TestBoldRetriever(unittest.TestCase):
 
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -71,7 +71,7 @@ class TestBoldRetriever(unittest.TestCase):
 
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -88,7 +88,7 @@ class TestBoldRetriever(unittest.TestCase):
 
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -113,7 +113,7 @@ class TestBoldRetriever(unittest.TestCase):
 
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 

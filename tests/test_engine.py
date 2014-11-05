@@ -87,10 +87,8 @@ class TestEngine(unittest.TestCase):
         expected = 'Hemerobiidae'
         try:
             result = engine.get_family_name_for_taxon(tax_id)
-        except Error, exc:
+        except Error as exc:
             print(exc)
-        #reactor.callFromThread(reactor.stop)
-        #reactor.run()
         self.assertEqual(expected, result)
 
     """
