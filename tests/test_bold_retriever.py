@@ -5,6 +5,7 @@ import unittest
 import requests
 
 from bold_retriever import bold_retriever as br
+from bold_retriever import engine
 
 
 class TestBoldRetriever(unittest.TestCase):
@@ -33,7 +34,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = ['Diptera', 'Culicidae', 'Ochlerotatus impiger']
         self.assertEqual(results, expected)
