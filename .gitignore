@@ -5,6 +5,8 @@ dist
 *csv
 .idea
 *.py[cod]
+_trial_temp*
+tests_eero
 
 # C extensions
 *.so
