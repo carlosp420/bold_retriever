@@ -6,7 +6,7 @@ Sphinx==1.2.3
 argparse==1.2.1
 beautifulsoup4==4.3.2
 biopython==1.64
-bold-retriever==0.2.2
+bold-retriever==0.2.4
 certifi==14.05.14
 coverage==3.7.1
 coveralls==0.4.2
