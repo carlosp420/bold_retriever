@@ -1,14 +1,10 @@
 import codecs
 import os
+import unittest
 
-from Bio.SeqRecord import SeqRecord
-from Bio.Seq import Seq
 import requests
-from twisted.trial import unittest
-from twisted.internet import reactor, defer
-from unipath import Path
 
-from bold_retriever import engine
+from bold_retriever import bold_retriever as br
 
 
 class TestBoldRetriever(unittest.TestCase):
@@ -37,7 +33,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = br.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = ['Diptera', 'Culicidae', 'Ochlerotatus impiger']
         self.assertEqual(results, expected)
@@ -54,7 +50,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = br.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -71,7 +67,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = br.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -88,7 +84,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = br.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -113,13 +109,13 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = br.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
     def test_create_output_file(self):
-        result = engine.create_output_file("my_fasta_file.fas")
+        result = br.create_output_file("my_fasta_file.fas")
         expected = "my_fasta_file.fas_output.csv"
         self.assertEqual(result, expected)
 
@@ -127,46 +123,52 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "my_fasta_file.fas_output.csv"
         if os.path.isfile(expected):
             os.remove(expected)
-        engine.create_output_file("my_fasta_file.fas")
+        br.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
-    def test_generate_output_content(self):
+    def test_process_classification(self):
+        obj = {
+            'classification': 'true',
+            'class': 'Insecta',
+            'order': 'Lepidoptera',
+            'family': 'Nymphalidae',
+        }
+        expected = "Insecta,Lepidoptera,Nymphalidae"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_process_classification_class_none(self):
+        obj = {
+            'classification': 'true',
+        }
+        expected = "None,None,None"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_process_classification_false(self):
+        obj = {
+            'classification': 'false',
+        }
+        expected = "None,None,None"
+        result = br.process_classification(obj)
+        self.assertEqual(expected, result)
+
+    def test_generate_output_content_for_file(self):
         output_filename = 'ionx13.fas_output.csv'
         if os.path.isfile(output_filename):
             os.remove(output_filename)
-
-        seq = Seq('AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTAT' \
-                  'TGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTT' \
-                  'ATTATAATTttttttATAGTAATACCTATTATAATT')
-        seq_record = SeqRecord(seq, id="ionx13")
-
-        res_file = Path(__file__).absolute().ancestor(1) + "/Bold_Retriever/response1.xml"
-        with open(res_file, 'r') as f:
-            request = f.read()
-        all_ids, taxon_list = engine.parse_bold_xml(
-            request,
-            str(seq_record.seq),
-            str(seq_record.id),
-            [], [])
-
-        def printError(failure):
-            import sys
-            sys.stderr.write(str(failure))
-
-        def check_result():
-            result = codecs.open(output_filename, "r", "utf-8").readlines()[1][:6]
-            expected = "ionx13"
-            self.assertEqual(expected, result.strip())
-
-        engine.create_output_file(output_filename.replace("_output.csv", ""))
-        d = defer.Deferred()
-        d.addCallback(engine.generate_output_content, all_ids=all_ids,
-                            output_filename=output_filename, seq_record=seq_record)
-        d.addCallback(check_result)
-        d.addErrback(printError)
-        reactor.callLater(12, reactor.stop)
-        reactor.run()
-
+        fasta_file = os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'ionx13.fas',
+        )
+        br.generate_output_content_for_file(
+            output_filename,
+            fasta_file,
+            'COX1_SPECIES',
+        )
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[0][:6]
+        expected = "ionx13"
+        self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):
         obj = {'division': 'animal',
@@ -180,7 +182,7 @@ class TestBoldRetriever(unittest.TestCase):
                'order': u'Neuroptera',
                'id': 'OTU_99',
                'tax_id': 'Neuroptera'}
-        results = engine.get_tax_id_from_web(obj)
+        results = br.get_tax_id_from_web(obj)
         self.assertEqual('Hemerobius pini', results['tax_id'])
 
 

@@ -6,31 +6,6 @@ import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
 import requests
-from twisted.internet import reactor, threads
-from twisted.web.error import Error
-
-
-def get(url, payload):
-    """Wrapper function for requests.get so we can use fake requests when
-    writing unittests.
-    :param url:
-    :param params: payload
-    :return: response object from requests.get
-    """
-    r = requests.get(url, params=payload)
-    return r
-
-
-def create_output_file(f):
-    """Containing only column headers of the CSV file."""
-    output = "seq_id,bold_id,similarity,division,class,order,family,species,"
-    output += "collection_country\n"
-
-    output_filename = f.strip() + "_output.csv"
-    myfile = codecs.open(output_filename, "w", "utf-8")
-    myfile.write(output)
-    myfile.close()
-    return output_filename
 
 
 def taxon_search(obj):
@@ -105,7 +80,6 @@ def taxon_data(obj):
             # Try to get the tax_id from the webpage BIN.
             return get_tax_id_from_web(obj)
 
-
 def get_tax_id_from_web(obj):
     """Try to get the tax_id from the webpage BIN."""
     logging.info('Trying to get the tax_id from the webpage Public_BIN.')
@@ -142,7 +116,6 @@ def get_tax_id_from_web(obj):
             if res:
                 obj['tax_id'] = res.groups()[0]
                 obj['family'] = get_family_name_for_taxon(obj['tax_id'])
-                reactor.callFromThread(reactor.stop)
             return obj
     logging.info('The BOLD webpage does not contain Genus and Species names '
                  'for BOLD record %s.' % obj['bold_id'] )
@@ -157,30 +130,14 @@ def get_family_name_for_taxon(tax_id):
         # This is already a family name
         return taxon
     elif taxon.endswith("nae"):
-        result = None
-        try:
-            result = threads.blockingCallFromThread(reactor, get_parentname, taxon)
-        except Error, exc:
-            print(exc)
-        # reactor.callFromThread(reactor.stop)
+        result = get_parentname(taxon)
         return result
     else:
         # this might be a genus
-        genus_parent = ''
-        try:
-            genus_parent = threads.blockingCallFromThread(reactor, get_parentname, taxon)
-        except Error, exc:
-            print(exc)
-        # reactor.callFromThread(reactor.stop)
-
+        genus_parent = get_parentname(taxon)
         if genus_parent.endswith("nae"):
             # this is a subfamily then do another search
-            subfamily_parent = ''
-            try:
-                subfamily_parent = threads.blockingCallFromThread(reactor, get_parentname, genus_parent)
-            except Error, exc:
-                print(exc)
-            # reactor.callFromThread(reactor.stop)
+            subfamily_parent = get_parentname(genus_parent)
             return subfamily_parent
         else:
             return genus_parent
@@ -198,6 +155,65 @@ def get_parentname(taxon):
         for key, val in items:
             if val['parentname']:
                 return val['parentname']
+
+def process_classification(obj):
+    out = ""
+    if obj['classification'] == "true":
+        if 'class' in obj:
+            out += obj['class'] + ","
+        else:
+            out += "None,"
+
+        if 'order' in obj:
+            out += obj['order'] + ","
+        else:
+            out += "None,"
+
+        if 'family' in obj:
+            out += obj['family']
+        else:
+            out += "None"
+    else:
+        out += "None,None,None"
+    return out
+
+def get(url, payload):
+    """Wrapper function for requests.get so we can use fake requests when
+    writing unittests.
+    :param url:
+    :param params: payload
+    :return: response object from requests.get
+    """
+    r = requests.get(url, params=payload)
+    return r
+
+def generate_output_content(all_ids, output_filename, seq_record):
+    out = ""
+    if all_ids is not None:
+        for obj in all_ids:
+            if 'tax_id' in obj:
+                r = taxon_search(obj)
+
+                if r is None:
+                    continue
+                obj['taxID'] = r['taxID']
+                obj['division'] = r['division']
+                # print "== obj", obj
+                obj = taxon_data(obj)
+                out += obj['bold_id'] + ","
+                out += obj['id'] + "," + obj['similarity'] + ","
+                out += obj['collection_country'] + ","
+                out += obj['division'] + ","
+                out += obj['tax_id'] + ","
+                out += process_classification(obj)
+                out += '\n'
+        with codecs.open(output_filename, "a", "utf-8") as handle:
+            handle.write(out)
+    else:
+        out = "nohit," + str(seq_record.id) + ","
+        out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
+        with codecs.open(output_filename, "a", "utf-8") as handle:
+            handle.write(out)
 
 
 def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
@@ -231,59 +247,3 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
     except TypeError as e:
         print "\n>> Error got malformed XML from BOLD: " + str(e)
         return all_ids, taxon_list
-
-
-def process_classification(obj):
-    out = ""
-    if obj['classification'] == "true":
-        if 'class' in obj:
-            out += obj['class'] + ","
-        else:
-            out += "None,"
-
-        if 'order' in obj:
-            out += obj['order'] + ","
-        else:
-            out += "None,"
-
-        if 'family' in obj:
-            out += obj['family']
-        else:
-            out += "None"
-    else:
-        out += "None,None,None"
-    return out
-
-
-def generate_output_content(all_ids, output_filename, seq_record):
-    print(">>> function ggenerate output content is called")
-    out = ""
-    if all_ids is not None:
-        for obj in all_ids:
-            if 'tax_id' in obj:
-                r = taxon_search(obj)
-
-                if r is None:
-                    continue
-                obj['taxID'] = r['taxID']
-                obj['division'] = r['division']
-                obj = taxon_data(obj)
-
-                out += obj['id'] + ","
-                out += obj['bold_id'] + ","
-                out += obj['similarity'] + ","
-                out += obj['division'] + ","
-                out += process_classification(obj) + ","
-                out += obj['tax_id'] + ","
-                out += obj['collection_country']
-                out += '\n'
-
-        with codecs.open(output_filename, "a", "utf-8") as handle:
-            print(">>Writing to file")
-            handle.write(out)
-    else:
-        out = "nohit," + str(seq_record.id) + ","
-        out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
-        with codecs.open(output_filename, "a", "utf-8") as handle:
-            print(">>Writing to file")
-            handle.write(out)
