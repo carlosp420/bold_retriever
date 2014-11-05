@@ -9,6 +9,6 @@ python:
 install: pip install -r requirements-test.txt
 
 # command to run tests, e.g. python setup.py test
-script: coverage run --source=bold_retriever `which trial` tests
+script: coverage run --source=bold_retriever `which trial` tests/
 
 after_success: coveralls
