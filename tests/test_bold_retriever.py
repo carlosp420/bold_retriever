@@ -51,7 +51,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -68,7 +68,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -85,7 +85,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -110,7 +110,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                     taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
@@ -135,7 +135,7 @@ class TestBoldRetriever(unittest.TestCase):
             'family': 'Nymphalidae',
         }
         expected = "Insecta,Lepidoptera,Nymphalidae"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
     def test_process_classification_class_none(self):
@@ -143,7 +143,7 @@ class TestBoldRetriever(unittest.TestCase):
             'classification': 'true',
         }
         expected = "None,None,None"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
     def test_process_classification_false(self):
@@ -151,7 +151,7 @@ class TestBoldRetriever(unittest.TestCase):
             'classification': 'false',
         }
         expected = "None,None,None"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
     def test_generate_output_content_for_file(self):
@@ -162,7 +162,7 @@ class TestBoldRetriever(unittest.TestCase):
             os.path.abspath(os.path.dirname(__file__)),
             'ionx13.fas',
         )
-        br.generate_output_content_for_file(
+        engine.generate_output_content(
             output_filename,
             fasta_file,
             'COX1_SPECIES',
@@ -183,7 +183,7 @@ class TestBoldRetriever(unittest.TestCase):
                'order': u'Neuroptera',
                'id': 'OTU_99',
                'tax_id': 'Neuroptera'}
-        results = br.get_tax_id_from_web(obj)
+        results = engine.get_tax_id_from_web(obj)
         self.assertEqual('Hemerobius pini', results['tax_id'])
 
 
