@@ -1,25 +1,15 @@
 import argparse
 from argparse import RawTextHelpFormatter
 import codecs
-import json
-import logging
-from pprint import pformat
-import re
 import urllib
 
 from Bio import SeqIO
-from bs4 import BeautifulSoup
-import requests
 from twisted.internet.defer import DeferredSemaphore, gatherResults
 from twisted.web.client import Agent, readBody
 from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
 import engine
-
-
-
-
 
 
 def create_output_file(f):
@@ -32,8 +22,6 @@ def create_output_file(f):
     myfile.write(output)
     myfile.close()
     return output_filename
-
-
 
 
 def cbRequest(response, seq_record, output_filename):
@@ -78,7 +66,6 @@ def async(seq_record, db, output_filename):
     return d
 
 
-
 def generate_jobs(output_filename, fasta_file, db):
     """
     Use Twisted.
@@ -95,8 +82,6 @@ def generate_jobs(output_filename, fasta_file, db):
     reactor.run()
     print("Processed all sequences.")
     return "Processed all sequences."
-
-
 
 
 def get_args(args):

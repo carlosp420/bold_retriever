@@ -80,6 +80,7 @@ def taxon_data(obj):
             # Try to get the tax_id from the webpage BIN.
             return get_tax_id_from_web(obj)
 
+
 def get_tax_id_from_web(obj):
     """Try to get the tax_id from the webpage BIN."""
     logging.info('Trying to get the tax_id from the webpage Public_BIN.')
@@ -118,7 +119,7 @@ def get_tax_id_from_web(obj):
                 obj['family'] = get_family_name_for_taxon(obj['tax_id'])
             return obj
     logging.info('The BOLD webpage does not contain Genus and Species names '
-                 'for BOLD record %s.' % obj['bold_id'] )
+                 'for BOLD record %s.' % obj['bold_id'])
     return obj
 
 
@@ -156,6 +157,7 @@ def get_parentname(taxon):
             if val['parentname']:
                 return val['parentname']
 
+
 def process_classification(obj):
     out = ""
     if obj['classification'] == "true":
@@ -177,6 +179,7 @@ def process_classification(obj):
         out += "None,None,None"
     return out
 
+
 def get(url, payload):
     """Wrapper function for requests.get so we can use fake requests when
     writing unittests.
@@ -186,6 +189,7 @@ def get(url, payload):
     """
     r = requests.get(url, params=payload)
     return r
+
 
 def generate_output_content(all_ids, output_filename, seq_record):
     out = ""

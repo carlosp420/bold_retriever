@@ -1,9 +1,5 @@
 from twisted.trial import unittest
-from twisted.internet import reactor, threads, task
 from twisted.web.error import Error
-from threading import Thread
-from twisted.internet.defer import DeferredSemaphore, gatherResults, execute
-from crochet import setup, run_in_reactor
 
 from bold_retriever import engine
 
@@ -123,7 +119,6 @@ class TestEngine(unittest.TestCase):
         threads.callMultipleInThread(commands)
         reactor.run()
     """
-
 
     def test_process_classification(self):
         obj = {
