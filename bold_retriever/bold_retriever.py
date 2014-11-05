@@ -37,19 +37,12 @@ def create_output_file(f):
 
 
 def cbRequest(response, seq_record, output_filename):
-    print 'Response version:', response.version
-    print 'Response code:', response.code
-    print 'Response phrase:', response.phrase
-    print 'Response headers:'
-    print pformat(list(response.headers.getAllRawHeaders()))
     d = readBody(response)
     d.addCallback(cbBody, seq_record, output_filename)
     return d
 
 
 def cbBody(body, seq_record, output_filename):
-    print 'Response body:'
-
     all_ids = []
     taxon_list = []
     if isinstance(body, basestring):

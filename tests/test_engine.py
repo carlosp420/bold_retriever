@@ -93,8 +93,8 @@ class TestEngine(unittest.TestCase):
             result = engine.get_family_name_for_taxon(tax_id)
         except Error, exc:
             print(exc)
-        reactor.callFromThread(reactor.stop)
-        reactor.run()
+        #reactor.callFromThread(reactor.stop)
+        #reactor.run()
         self.assertEqual(expected, result)
 
     """
