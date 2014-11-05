@@ -7,6 +7,8 @@ dist
 *.py[cod]
 _trial_temp*
 tests_eero
+benchmarks.R
+labelled*fa
 
 # C extensions
 *.so
