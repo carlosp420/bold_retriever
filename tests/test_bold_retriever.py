@@ -2,6 +2,8 @@ import codecs
 import os
 import unittest
 
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
 import requests
 
 from bold_retriever import bold_retriever as br
@@ -154,21 +156,21 @@ class TestBoldRetriever(unittest.TestCase):
         result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
-    def test_generate_output_content_for_file(self):
+    def test_generate_output_content(self):
         output_filename = 'ionx13.fas_output.csv'
+        seq = Seq("AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTCAACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCATTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA")
+        seq_record = SeqRecord(seq)
+        seq_record.id = 'ionx13'
+
         if os.path.isfile(output_filename):
             os.remove(output_filename)
-        fasta_file = os.path.join(
-            os.path.abspath(os.path.dirname(__file__)),
-            'ionx13.fas',
-        )
         engine.generate_output_content(
+            [{'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA', 'similarity': '1', 'collection_country': 'Canada', 'bold_id': 'SIOCA145-10', 'id': 'ionx13', 'tax_id': 'Psocoptera'}],
             output_filename,
-            fasta_file,
-            'COX1_SPECIES',
+            seq_record,
         )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[0][:6]
-        expected = "ionx13"
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[0].split(",")[0]
+        expected = "SIOCA145-10"
         self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):
