@@ -52,6 +52,15 @@ For example::
     GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
     GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
 
+Speed
+-----
+**bold_retriever** uses the library Twisted for performing asynchronous calls.
+This speeds up the total processing time:
+|benchmarks|
+
+.. |benchmarks| image:: benchmarks.svg
+
+
 Full documentation
 ------------------
 See the full documentation at http://bold-retriever.readthedocs.org
