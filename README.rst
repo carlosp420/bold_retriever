@@ -54,11 +54,7 @@ For example::
 Speed
 -----
 **bold_retriever** uses the library Twisted for performing asynchronous calls.
-This speeds up the total processing time:
-
-|benchmarks|
-
-
+This speeds up the total processing time.
 
 Full documentation
 ------------------
@@ -75,5 +71,3 @@ See the full documentation at http://bold-retriever.readthedocs.org
 .. |Download numbers| image:: https://pypip.in/download/bold_retriever/badge.svg
    :target: https://crate.io/packages/bold_retriever
    :alt: Downloads
-.. |benchmarks| image:: benchmarks.png
-   :alt: benchmarks
