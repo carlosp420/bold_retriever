@@ -22,26 +22,30 @@ def taxon_search(obj):
     r = get(url, payload)
     found_division = False
     if r.text != "":
-        response = json.loads(r.text)
-        if hasattr(response, 'items'):
-            for k, v in response.items():
-                try:
-                    if v['tax_division'] == 'Animals':
-                        # this is the taxID
-                        found_division = True
-                        return {'division': 'animal', 'taxID': k}
-                except:
-                    logging.warning("Error: %s" % str(r.text))
-
-            if not found_division:
-                for k, v in json.loads(r.text).items():
+        try:
+            response = json.loads(r.text)
+            if hasattr(response, 'items'):
+                for k, v in response.items():
                     try:
-                        if v['tax_division'] != 'Animals':
+                        if v['tax_division'] == 'Animals':
                             # this is the taxID
-                            return {'division': 'not animal', 'taxID': k}
+                            found_division = True
+                            return {'division': 'animal', 'taxID': k}
                     except:
-                        logging.warning("Got funny reply from BOLD.")
-        else:
+                        logging.warning("Error: %s" % str(r.text))
+
+                if not found_division:
+                    for k, v in json.loads(r.text).items():
+                        try:
+                            if v['tax_division'] != 'Animals':
+                                # this is the taxID
+                                return {'division': 'not animal', 'taxID': k}
+                        except:
+                            logging.warning("Got funny reply from BOLD.")
+            else:
+                return None
+        except ValueError as exc:
+            logging.warning(exc)
             return None
     return None
 
@@ -136,7 +140,9 @@ def get_family_name_for_taxon(tax_id):
     else:
         # this might be a genus
         genus_parent = get_parentname(taxon)
-        if genus_parent.endswith("nae"):
+        if genus_parent is None:
+            return taxon
+        elif genus_parent.endswith("nae"):
             # this is a subfamily then do another search
             subfamily_parent = get_parentname(genus_parent)
             return subfamily_parent
@@ -154,8 +160,12 @@ def get_parentname(taxon):
     elif isinstance(req.text, basestring):
         items = json.loads(req.text).items()
         for key, val in items:
-            if val['parentname']:
-                return val['parentname']
+            try:
+                if val['parentname']:
+                    return val['parentname']
+            except TypeError:
+                logging.warning("BOLD returned uninformative JSON: " + "".join(req.text))
+                return None
 
 
 def process_classification(obj):
