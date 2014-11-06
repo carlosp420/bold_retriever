@@ -1,6 +1,8 @@
+import glob
 import os
 import subprocess
 import unittest
+from twisted.internet import reactor, task
 
 from bold_retriever import bold_retriever as br
 
@@ -53,22 +55,25 @@ class CmdlineTest(unittest.TestCase):
 
         self.assertTrue(os.path.isfile(result_file))
 
-    def test_otu99(self):
-        """It should pass despite returning empty list for classification."""
-        test_folder = os.path.abspath(os.path.dirname(__file__))
-        input_file = os.path.join(test_folder, 'otu99.fas')
-        args = self.parser.parse_args(['-f', input_file, '-db',
-                                       'COX1_SPECIES'])
-        br.get_started(args)
-        result_file = os.path.join(test_folder, 'otu99.fas_output.csv')
-        self.assertTrue(os.path.isfile(result_file))
+    # def test_otu99(self):
+        # """It should pass despite returning empty list for classification."""
+        # test_folder = os.path.abspath(os.path.dirname(__file__))
+        # input_file = os.path.join(test_folder, 'otu99.fas')
+        # args = self.parser.parse_args(['-f', input_file, '-db', 'COX1_SPECIES'])
+        # br.get_started(args)
+        # result_file = os.path.join(test_folder, 'otu99.fas_output.csv')
+        # self.assertTrue(os.path.isfile(result_file))
+#
+    # def test_insecta(self):
+        # """It should pass despite returning empty list for classification, insecta."""
+        # test_folder = os.path.abspath(os.path.dirname(__file__))
+        # input_file = os.path.join(test_folder, 'otu_insecta.fas')
+        # args = self.parser.parse_args(['-f', input_file, '-db', 'COX1_SPECIES'])
+        # br.get_started(args)
+        # result_file = os.path.join(test_folder, 'otu_insecta.fas_output.csv')
+        # self.assertTrue(os.path.isfile(result_file))
 
-    def test_insecta(self):
-        """It should pass despite returning empty list for classification."""
+    def tearDown(self):
         test_folder = os.path.abspath(os.path.dirname(__file__))
-        input_file = os.path.join(test_folder, 'otu_insecta.fas')
-        args = self.parser.parse_args(['-f', input_file, '-db',
-                                       'COX1_SPECIES'])
-        br.get_started(args)
-        result_file = os.path.join(test_folder, 'otu_insecta.fas_output.csv')
-        self.assertTrue(os.path.isfile(result_file))
+        for i in glob.glob(test_folder + "/*csv"):
+            os.remove(i)

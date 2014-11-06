@@ -2,9 +2,12 @@ import codecs
 import os
 import unittest
 
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
 import requests
 
 from bold_retriever import bold_retriever as br
+from bold_retriever import engine
 
 
 class TestBoldRetriever(unittest.TestCase):
@@ -33,8 +36,8 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+                                        taxon_list)[1]
         expected = ['Diptera', 'Culicidae', 'Ochlerotatus impiger']
         self.assertEqual(results, expected)
 
@@ -50,8 +53,8 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -67,8 +70,8 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -84,8 +87,8 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -109,8 +112,8 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = br.parse_bold_xml(request, seq_object, id, all_ids,
-                                    taxon_list)[1]
+        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+                                        taxon_list)[1]
         expected = []
         self.assertEqual(results, expected)
 
@@ -126,6 +129,18 @@ class TestBoldRetriever(unittest.TestCase):
         br.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
+    def test_create_output_file_check_headers(self):
+        expected = "my_fasta_file.fas_output.csv"
+        if os.path.isfile(expected):
+            os.remove(expected)
+        br.create_output_file("my_fasta_file.fas")
+
+        with open(expected, "r") as f:
+            contents = f.readlines()
+        headers = contents[0]
+
+        self.assertTrue(os.path.isfile(expected))
+
     def test_process_classification(self):
         obj = {
             'classification': 'true',
@@ -134,7 +149,7 @@ class TestBoldRetriever(unittest.TestCase):
             'family': 'Nymphalidae',
         }
         expected = "Insecta,Lepidoptera,Nymphalidae"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
     def test_process_classification_class_none(self):
@@ -142,7 +157,7 @@ class TestBoldRetriever(unittest.TestCase):
             'classification': 'true',
         }
         expected = "None,None,None"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
     def test_process_classification_false(self):
@@ -150,24 +165,24 @@ class TestBoldRetriever(unittest.TestCase):
             'classification': 'false',
         }
         expected = "None,None,None"
-        result = br.process_classification(obj)
+        result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
-    def test_generate_output_content_for_file(self):
+    def test_generate_output_content(self):
         output_filename = 'ionx13.fas_output.csv'
+        seq = Seq("AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTCAACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCATTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA")
+        seq_record = SeqRecord(seq)
+        seq_record.id = 'ionx13'
+
         if os.path.isfile(output_filename):
             os.remove(output_filename)
-        fasta_file = os.path.join(
-            os.path.abspath(os.path.dirname(__file__)),
-            'ionx13.fas',
-        )
-        br.generate_output_content_for_file(
+        engine.generate_output_content(
+            [{'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA', 'similarity': '1', 'collection_country': 'Canada', 'bold_id': 'SIOCA145-10', 'id': 'ionx13', 'tax_id': 'Psocoptera'}],
             output_filename,
-            fasta_file,
-            'COX1_SPECIES',
+            seq_record,
         )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[0][:6]
-        expected = "ionx13"
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
+        expected = "ionx13,SIOCA145-10,1,animal,Insecta,Psocoptera,Peripsocidae,Peripsocus subfasciatus,Canada"
         self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):
@@ -182,7 +197,7 @@ class TestBoldRetriever(unittest.TestCase):
                'order': u'Neuroptera',
                'id': 'OTU_99',
                'tax_id': 'Neuroptera'}
-        results = br.get_tax_id_from_web(obj)
+        results = engine.get_tax_id_from_web(obj)
         self.assertEqual('Hemerobius pini', results['tax_id'])
 
 

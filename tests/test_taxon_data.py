@@ -1,6 +1,6 @@
 import unittest
 
-from bold_retriever import bold_retriever as br
+from bold_retriever import engine
 
 
 class TestBoldRetriever(unittest.TestCase):
@@ -12,13 +12,13 @@ class TestBoldRetriever(unittest.TestCase):
         obj['order'] = 'Diptera'
         obj['family'] = 'Limoniidae'
         obj['classification'] = 'true'
-        results = br.taxon_data(obj)
+        results = engine.taxon_data(obj)
         self.assertEqual(results, obj)
 
     def test_taxon_data_returns_false(self):
         taxID = '29737001928929'
         obj = {'classification': 'false', 'taxID': taxID}
-        results = br.taxon_data(obj)
+        results = engine.taxon_data(obj)
         self.assertEqual(results['classification'], 'false')
 
 
