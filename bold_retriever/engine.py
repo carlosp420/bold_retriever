@@ -193,6 +193,7 @@ def process_classification(obj):
 def get(url, payload):
     """Wrapper function for requests.get so we can use fake requests when
     writing unittests.
+
     :param url:
     :param params: payload
     :return: response object from requests.get
