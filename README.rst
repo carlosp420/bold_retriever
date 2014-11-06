@@ -76,5 +76,5 @@ See the full documentation at http://bold-retriever.readthedocs.org
 .. |Download numbers| image:: https://pypip.in/download/bold_retriever/badge.svg
    :target: https://crate.io/packages/bold_retriever
    :alt: Downloads
-.. |benchmarks| image:: benchmarks.svg
+.. |benchmarks| image:: benchmarks.png
    :alt: benchmarks
