@@ -129,6 +129,18 @@ class TestBoldRetriever(unittest.TestCase):
         br.create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
+    def test_create_output_file_check_headers(self):
+        expected = "my_fasta_file.fas_output.csv"
+        if os.path.isfile(expected):
+            os.remove(expected)
+        br.create_output_file("my_fasta_file.fas")
+
+        with open(expected, "r") as f:
+            contents = f.readlines()
+        headers = contents[0]
+
+        self.assertTrue(os.path.isfile(expected))
+
     def test_process_classification(self):
         obj = {
             'classification': 'true',
@@ -169,8 +181,8 @@ class TestBoldRetriever(unittest.TestCase):
             output_filename,
             seq_record,
         )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[0].split(",")[0]
-        expected = "SIOCA145-10"
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
+        expected = "ionx13,SIOCA145-10,1,animal,Insecta,Psocoptera,Peripsocidae,Peripsocus subfasciatus,Canada"
         self.assertEqual(expected, result.strip())
 
     def test_get_tax_id_from_web(self):

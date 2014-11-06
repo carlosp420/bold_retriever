@@ -204,12 +204,13 @@ def generate_output_content(all_ids, output_filename, seq_record):
                 obj['division'] = r['division']
                 # print "== obj", obj
                 obj = taxon_data(obj)
+                out += obj['id'] + ","
                 out += obj['bold_id'] + ","
-                out += obj['id'] + "," + obj['similarity'] + ","
-                out += obj['collection_country'] + ","
+                out += obj['similarity'] + ","
                 out += obj['division'] + ","
+                out += process_classification(obj) + ","
                 out += obj['tax_id'] + ","
-                out += process_classification(obj)
+                out += obj['collection_country']
                 out += '\n'
         with codecs.open(output_filename, "a", "utf-8") as handle:
             handle.write(out)
