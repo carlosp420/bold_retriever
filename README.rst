@@ -39,18 +39,17 @@ For example::
 
 * output::
 
-    bold_id        seq_id            similarity  collection_country  division  taxon                        class    order    family
-    FIDIP558-11    TE-14-27_FHYP_av  0.9884      Finland             animal    Diptera                      Insecta  Diptera  None
-    GBDP6413-09    TE-14-27_FHYP_av  0.9242      None                animal    Ornithomya anchineura        Insecta  Diptera  Hippoboscidae
-    GBDP2916-07    TE-14-27_FHYP_av  0.922       None                animal    Stenepteryx hirundinis       Insecta  Diptera  Hippoboscidae
-    GBDP2919-07    TE-14-27_FHYP_av  0.9149      None                animal    Ornithomya biloba            Insecta  Diptera  Hippoboscidae
-    GBDP2908-07    TE-14-27_FHYP_av  0.9078      None                animal    Ornithoctona sp. P-20        Insecta  Diptera  Hippoboscidae
-    GBDP2918-07    TE-14-27_FHYP_av  0.9076      None                animal    Ornithomya chloropus         Insecta  Diptera  Hippoboscidae
-    GBDP2935-07    TE-14-27_FHYP_av  0.8936      None                animal    Crataerina pallida           Insecta  Diptera  Hippoboscidae
-    GBMIN26225-13  TE-14-27_FHYP_av  0.8889      None                animal    Lucilia sericata             Insecta  Diptera  Calliphoridae
-    GBDP5820-09    TE-14-27_FHYP_av  0.8833      None                animal    Coenosia tigrina             Insecta  Diptera  Muscidae
-    GBMIN26204-13  TE-14-27_FHYP_av  0.883       None                animal    Lucilia cuprina              Insecta  Diptera  Calliphoridae
-    GBMIN18768-13  TE-14-27_FHYP_av  0.8823      Brazil              animal    Ornithoctona erythrocephala  Insecta  Diptera  Hippoboscidae
+    seq_id  bold_id       similarity  division  class       order       family        species                collection_country
+    OTU_99  FBNE064-11    1           animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius pini        Germany
+    OTU_99  NEUFI079-11   1           animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius pini        Finland
+    OTU_99  FBNE172-13    0.9937      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius atrifrons   Germany
+    OTU_99  FBNE162-13    0.9936      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius contumax    Austria
+    OTU_99  TTSOW138-09   0.9811      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius ovalis      Canada
+    OTU_99  CNPAH380-13   0.9811      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius             Canada
+    OTU_99  CNKOF1602-14  0.9811      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius pinidumus   Canada
+    OTU_99  NRAS173-11    0.9748      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius conjunctus  Canada
+    OTU_99  SSBAE2911-13  0.9748      animal    Collembola  None        None          Collembola             Canada
+    OTU_99  CNPAQ117-13   0.9686      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius humulinus   Canada
 
 Speed
 -----
