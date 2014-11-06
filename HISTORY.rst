@@ -2,7 +2,8 @@
 
 History
 -------
-* v0.2.X: Reorganizing columns in output file. Querying the API for family
+* v1.0.0: Using Twisted for asynchronous calls and increase in speed.
+* v0.2.4: Reorganizing columns in output file. Querying the API for family
           name of taxa.
 * v0.2.2: Killed bug taxon search.
 * v0.2.1: Killed bug in scraping web ``Public_BIN`` for species ID.
