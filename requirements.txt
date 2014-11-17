@@ -1,5 +1,5 @@
 Twisted==14.0.2
-argparse==1.2.1
+argparse>=1.2.1
 beautifulsoup4==4.3.2
 biopython==1.64
 certifi==14.05.14
