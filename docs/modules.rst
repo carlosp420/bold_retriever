@@ -5,3 +5,4 @@ bold_retriever
    :maxdepth: 4
 
    bold_retriever
+   engine

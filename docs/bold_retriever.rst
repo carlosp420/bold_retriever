@@ -12,6 +12,10 @@ bold_retriever.bold_retriever module
     :undoc-members:
     :show-inheritance:
 
+.. automodule:: bold_retriever.engine
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Module contents
 ---------------
@@ -20,3 +24,4 @@ Module contents
     :members:
     :undoc-members:
     :show-inheritance:
+
