@@ -38,8 +38,8 @@ class TestBoldRetriever(unittest.TestCase):
         # get only taxon_list
         results = engine.parse_bold_xml(request, seq_object, id, all_ids,
                                         taxon_list)[1]
-        expected = ['Diptera', 'Culicidae', 'Ochlerotatus impiger']
-        self.assertEqual(results, expected)
+        expected = 'Diptera'
+        self.assertTrue(expected in results)
 
     def test_parse_bold_xml2(self):
         # malformed XML returned from BOLD
