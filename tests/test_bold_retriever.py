@@ -4,7 +4,6 @@ import unittest
 
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-import requests
 
 from bold_retriever import bold_retriever as br
 from bold_retriever import engine
@@ -16,17 +15,9 @@ class TestBoldRetriever(unittest.TestCase):
         self.db = "COX1_L640bp"
 
     def test_parse_bold_xml1(self):
-        # normal request
-        r = requests.get(
-            url="http://boldsystems.org/index.php/Ids_xml",
-            params={
-                'db': 'COX1_L640bp',
-                'sequence': 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTAT'
-                            'TGGAAATGACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTT'
-                            'ATTATAATTttttttATAGTAATACCTATTATAATT',
-            }
-        )
-        request = r.text
+        with open("Bold_Retriever/response1.xml", "r") as handle:
+            response1 = handle.read()
+
         seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
                      'GACCAAATTTATAACGTAATTGTTACAGCTCATGCTTTTATTATAATTttttt' \
                      'tATAGTAATACCTATTATAATT'
@@ -36,7 +27,7 @@ class TestBoldRetriever(unittest.TestCase):
         taxon_list = []
 
         # get only taxon_list
-        results = engine.parse_bold_xml(request, seq_object, id, all_ids,
+        results = engine.parse_bold_xml(response1, seq_object, id, all_ids,
                                         taxon_list)[1]
         expected = 'Diptera'
         self.assertTrue(expected in results)
