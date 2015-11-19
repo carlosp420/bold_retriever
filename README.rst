@@ -2,7 +2,7 @@
 Bold Retriever
 ==============
 
-|Pypi index| |Build Status| |Cover alls| |Dependencies status| |Download numbers|
+|Pypi index| |Build Status| |Cover alls| |Dependencies status|
 
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
@@ -13,13 +13,11 @@ Run this way
 ------------
 * clone repository::
 
-    cd $USERAPPL
     git clone https://github.com/carlosp420/bold_retriever.git
 
 * install dependencies (python2.7)::
 
     cd bold_retriever
-    module load biopython-env
     pip install -r requirements.txt
 
 * run software
@@ -68,6 +66,3 @@ See the full documentation at http://bold-retriever.readthedocs.org
    :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 .. |Dependencies status| image:: https://gemnasium.com/carlosp420/bold_retriever.svg
    :target: https://gemnasium.com/carlosp420/bold_retriever
-.. |Download numbers| image:: https://pypip.in/download/bold_retriever/badge.svg
-   :target: https://crate.io/packages/bold_retriever
-   :alt: Downloads
