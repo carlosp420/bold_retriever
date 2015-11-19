@@ -2,8 +2,7 @@
 Bold Retriever
 ==============
 
-|Pypi index| |Build Status| |Cover alls| |Dependencies status|
-
+|Pypi index| |Build Status| |Cover alls| |Dependencies status| |supported-versions|
 
 This script accepts FASTA files containing COI sequences. It queries the BOLD
 database http://boldsystems.org/ in order to get the taxa identification
@@ -66,3 +65,7 @@ See the full documentation at http://bold-retriever.readthedocs.org
    :target: https://coveralls.io/r/carlosp420/bold_retriever?branch=master
 .. |Dependencies status| image:: https://gemnasium.com/carlosp420/bold_retriever.svg
    :target: https://gemnasium.com/carlosp420/bold_retriever
+.. |supported-versions| image:: https://img.shields.io/pypi/pyversions/dataset-creator.svg?style=flat
+   :alt: Supported versions
+   :target: https://pypi.python.org/pypi/dataset-creator
+
