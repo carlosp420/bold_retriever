@@ -37,9 +37,6 @@ clean-test:
 lint:
 	flake8 bold_retriever tests
 
-test:
-	python runtests.py
-
 test-all:
 	tox
 
