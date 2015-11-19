@@ -9,13 +9,17 @@ from bold_retriever import bold_retriever as br
 from bold_retriever import engine
 
 
+TEST_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
+                              "Bold_Retriever")
+
+
 class TestBoldRetriever(unittest.TestCase):
 
     def setUp(self):
         self.db = "COX1_L640bp"
 
     def test_parse_bold_xml1(self):
-        with open("Bold_Retriever/response1.xml", "r") as handle:
+        with open(os.path.join(TEST_FILE_PATH, "response1.xml"), "r") as handle:
             response1 = handle.read()
 
         seq_object = 'AAAGAATTTTAATTCGAGCTGAATTAAGTCAACCAGGAATATTTATTGGAAAT' \
