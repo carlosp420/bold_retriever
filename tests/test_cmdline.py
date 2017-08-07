@@ -4,7 +4,7 @@ import subprocess
 import unittest
 from twisted.internet import reactor, task
 
-from bold_retriever import bold_retriever as br
+from bold_retriever import bold as br
 
 
 class CmdlineTest(unittest.TestCase):
@@ -44,16 +44,6 @@ class CmdlineTest(unittest.TestCase):
         f, db = br.get_args(args)
         self.assertEqual(f, 'ionx13.fas')
         self.assertEqual(db, 'COX1')
-
-    def test_get_started(self):
-        test_folder = os.path.abspath(os.path.dirname(__file__))
-        input_file = os.path.join(test_folder, 'ionx13.fas')
-        result_file = os.path.join(test_folder, 'ionx13.fas_output.csv')
-
-        args = self.parser.parse_args(['-f', input_file, '-db', 'COX1'])
-        br.get_started(args)
-
-        self.assertTrue(os.path.isfile(result_file))
 
     # def test_otu99(self):
         # """It should pass despite returning empty list for classification."""

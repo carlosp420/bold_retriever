@@ -11,7 +11,7 @@ import requests
 def taxon_search(obj):
     # obj['tax_id'] = "Morpho helenor"
     tax_id = obj['tax_id'].split(" ")
-    if len(tax_id) > 1:
+    if len(tax_id) >= 1:
         tax_id = tax_id[0]
     url = "http://www.boldsystems.org/index.php/API_Tax/TaxonSearch/"
     # print "I am sending this %s" % tax_id
@@ -19,29 +19,43 @@ def taxon_search(obj):
         'taxName': tax_id,
         'fuzzy': 'false',
     }
+    print(payload)
     r = get(url, payload)
     found_division = False
     if r.text != "":
+        print(r.text)
         try:
-            response = json.loads(r.text)
+            response = r.json()
             if hasattr(response, 'items'):
                 for k, v in response.items():
                     try:
-                        if v['tax_division'] == 'Animals':
+                        if v[0]['tax_division'] == 'Animals':
                             # this is the taxID
                             found_division = True
-                            return {'division': 'animal', 'taxID': k}
-                    except:
+                            return {
+                                'division': v[0]['tax_division'].lower(),
+                                'taxID': str(v[0]['taxid'])}
+                    except IndexError:
+                        pass
+                    except KeyError:
                         logging.warning("Error: %s" % str(r.text))
+                    except TypeError:
+                        pass
 
                 if not found_division:
                     for k, v in json.loads(r.text).items():
                         try:
-                            if v['tax_division'] != 'Animals':
+                            if v[0]['tax_division'] != 'Animals':
                                 # this is the taxID
-                                return {'division': 'not animal', 'taxID': k}
-                        except:
-                            logging.warning("Got funny reply from BOLD.")
+                                return {
+                                    'division': 'not animal',
+                                    'taxID': str(v[0]['taxid'])}
+                        except IndexError:
+                            pass
+                        except KeyError:
+                            logging.warning("Error: %s" % str(r.text))
+                        except TypeError:
+                            pass
             else:
                 return None
         except ValueError as exc:
@@ -63,7 +77,7 @@ def taxon_data(obj):
         obj = {'classification': 'false'}
         return obj
     # this is a string not a list
-    elif isinstance(req.text, basestring):
+    elif isinstance(req.text, str):
         items = json.loads(req.text).items()
         for key, val in items:
             try:
@@ -156,12 +170,12 @@ def get_parentname(taxon):
 
     if req.text == '[]':
         return None
-    elif isinstance(req.text, basestring):
-        items = json.loads(req.text).items()
+    elif isinstance(req.text, str):
+        items = req.json().items()
         for key, val in items:
             try:
-                if val['parentname']:
-                    return val['parentname']
+                if val[0]['parentname']:
+                    return val[0]['parentname']
             except TypeError:
                 logging.warning("BOLD returned uninformative JSON: " + "".join(req.text))
                 return None
@@ -233,21 +247,19 @@ def generate_output_content(all_ids, output_filename, seq_record):
 
 def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
     try:
+        # print(request)
         root = ET.fromstring(request)
         for match in root.findall('match'):
             out = dict()
             out['seq'] = str(seq_object)
             out['id'] = str(id)
-            similarity = match.find('similarity').text
-            out['similarity'] = similarity
-            tax_id = match.find('taxonomicidentification').text
-            out['tax_id'] = tax_id
+            out['similarity'] = match.find('similarity').text
+            out['tax_id'] = match.find('taxonomicidentification').text
 
             if match.find('specimen/collectionlocation/country').text:
                 ctry = match.find('specimen/collectionlocation/country').text
                 out['collection_country'] = ctry
             else:
-
                 out['collection_country'] = "None"
 
             myid = match.find('ID').text
@@ -257,8 +269,8 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
                 all_ids.append(out)
         return all_ids, taxon_list
     except ET.ParseError as e:
-        print "\n>> Error got malformed XML from BOLD: " + str(e)
+        print("\n>> Error got malformed XML from BOLD: " + str(e))
         return all_ids, taxon_list
     except TypeError as e:
-        print "\n>> Error got malformed XML from BOLD: " + str(e)
+        print("\n>> Error got malformed XML from BOLD: " + str(e))
         return all_ids, taxon_list

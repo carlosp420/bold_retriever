@@ -9,7 +9,7 @@ from twisted.web.client import Agent, readBody
 from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
-import engine
+from bold_retriever import engine
 
 
 def create_output_file(f):
@@ -33,7 +33,7 @@ def cbRequest(response, seq_record, output_filename):
 def cbBody(body, seq_record, output_filename):
     all_ids = []
     taxon_list = []
-    if isinstance(body, basestring):
+    if isinstance(body, str):
         all_ids, taxon_list = engine.parse_bold_xml(
             body,
             seq_record.seq,
@@ -67,13 +67,12 @@ def async(seq_record, db, output_filename):
 
 
 def generate_jobs(output_filename, fasta_file, db):
-    """Use Twisted."""
+    """Uses Twisted."""
     sem = DeferredSemaphore(50)
     jobs = []
-    append = jobs.append
 
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
-        append(sem.run(async, seq_record, db, output_filename))
+        jobs.append(sem.run(async, seq_record, db, output_filename))
 
     d = gatherResults(jobs)
     d.addCallback(lambda ignored: reactor.stop())

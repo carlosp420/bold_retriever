@@ -1,11 +1,12 @@
 import codecs
 import os
 import unittest
+from unittest.mock import patch, MagicMock
 
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from bold_retriever import bold_retriever as br
+from bold_retriever import bold as br
 from bold_retriever import engine
 
 
@@ -163,16 +164,24 @@ class TestBoldRetriever(unittest.TestCase):
         result = engine.process_classification(obj)
         self.assertEqual(expected, result)
 
+    @patch()
     def test_generate_output_content(self):
         output_filename = 'ionx13.fas_output.csv'
-        seq = Seq("AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTCAACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCATTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA")
+        seq = Seq("AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTC"
+                  "AACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCA"
+                  "TTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA")
         seq_record = SeqRecord(seq)
         seq_record.id = 'ionx13'
 
         if os.path.isfile(output_filename):
             os.remove(output_filename)
         engine.generate_output_content(
-            [{'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA', 'similarity': '1', 'collection_country': 'Canada', 'bold_id': 'SIOCA145-10', 'id': 'ionx13', 'tax_id': 'Psocoptera'}],
+            [{'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
+              'similarity': '1',
+              'collection_country': 'Canada',
+              'bold_id': 'SIOCA145-10',
+              'id': 'ionx13',
+              'tax_id': 'Psocoptera'}],
             output_filename,
             seq_record,
         )

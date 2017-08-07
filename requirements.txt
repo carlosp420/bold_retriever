@@ -4,5 +4,3 @@ beautifulsoup4==4.4.1
 biopython==1.66
 certifi==14.05.14
 requests>=2.4.1
-wsgiref==0.1.2
-zope.interface==4.1.3
