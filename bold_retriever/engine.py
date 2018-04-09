@@ -1,4 +1,5 @@
 import codecs
+import csv
 import json
 import logging
 import re
@@ -215,28 +216,13 @@ def get(url: str, payload: dict):
 
 
 def generate_output_content(all_ids, output_filename, seq_record):
-    out = ""
-    if all_ids is not None:
-        for obj in all_ids:
-            if 'tax_id' in obj:
-                r = taxon_search(obj)
-
-                if r is None:
-                    continue
-                obj['taxID'] = r['taxID']
-                obj['division'] = r['division']
-                # print "== obj", obj
-                obj = taxon_data(obj)
-                out += obj['id'] + ","
-                out += obj['bold_id'] + ","
-                out += obj['similarity'] + ","
-                out += obj['division'] + ","
-                out += process_classification(obj) + ","
-                out += obj['tax_id'] + ","
-                out += obj['collection_country']
-                out += '\n'
-        with codecs.open(output_filename, "a", "utf-8") as handle:
-            handle.write(out)
+    if all_ids:
+        headers = all_ids[0].keys()
+        with open(output_filename, "w") as handle:
+            csv_writer = csv.DictWriter(handle, fieldnames=headers)
+            csv_writer.writeheader()
+            for item in all_ids:
+                csv_writer.writerow(item)
     else:
         out = "nohit," + str(seq_record.id) + ","
         out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
@@ -273,3 +259,34 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
     except TypeError as e:
         print("\n>> Error got malformed XML from BOLD: " + str(e))
         return all_ids, taxon_list
+
+
+def parse_id_engine_xml(xml):
+    try:
+        root = ET.fromstring(xml)
+    except ET.ParseError as error:
+        print("\n>> Error got malformed XML from BOLD: " + str(error))
+    except TypeError as error:
+        print("\n>> Error got malformed XML from BOLD: " + str(error))
+
+    identifications = []
+
+    for match in root.findall('match'):
+        identification = dict()
+        for element in match:
+            if element.tag == "specimen":
+                for element_child in element:
+                    if element_child.tag == "collectionlocation":
+                        for collection in element_child:
+                            if collection.tag == "coord":
+                                for coord in collection:
+                                    identification[coord.tag] = coord.text
+                            else:
+                                identification[collection.tag] = collection.text
+                    else:
+                        identification[element_child.tag] = element_child.text
+            else:
+                identification[element.tag] = element.text
+        identifications.append(identification)
+
+    return identifications

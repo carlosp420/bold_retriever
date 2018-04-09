@@ -1,23 +1,25 @@
 import argparse
 from argparse import RawTextHelpFormatter
 from typing import Tuple
-import urllib
+from urllib.parse import urlencode
 
+import requests
 from Bio import SeqIO
 from twisted.internet.defer import DeferredSemaphore, gatherResults
 from twisted.web.client import Agent, readBody
 from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
-from bold_retriever import engine
+from engine import parse_id_engine_xml, generate_output_content
 
 
-def create_output_file(output_filename: str) -> str:
+def create_output_file(input_filename: str) -> str:
     """Containing only column headers of the CSV file."""
-    output = "seq_id,bold_id,similarity,division,class,order,family,species,"
+    output = "id,bold_id,sequencedescription,database,citation,taxonomicidentification,similarity,url,country,lat,lon,class,order,family,species,"
     output += "collection_country\n"
 
-    output_filename = output_filename.strip() + "_output.csv"
+    output_filename = input_filename.strip() + "_output.csv"
+    print(f"Creating output file {output_filename}")
     with open(output_filename, "w") as handle:
         handle.write(output)
     return output_filename
@@ -44,52 +46,38 @@ def cbBody(body, seq_record, output_filename):
         threads.callMultipleInThread(command)
 
 
-def async(seq_record, db, output_filename):
-    print("Processing sequence for %s" % str(seq_record.id))
+def id_engine(seq_record, db, output_filename):
+    """Send a COI sequence to BOLD and retrieve its identification"""
+    print(f"* Processing sequence for {seq_record.id}")
 
     domain = "http://boldsystems.org/index.php/Ids_xml"
     payload = {'db': db, 'sequence': str(seq_record.seq)}
-    url = domain + '?' + urllib.urlencode(payload)
+    url = domain + '?' + urlencode(payload)
 
-    agent = Agent(reactor)
-    d = agent.request(
-        'GET', url,
-        Headers({'User-Agent': ['bold_retriever']}),
-        None,
-    )
-    d.addCallback(cbRequest, seq_record=seq_record, output_filename=output_filename)
-
-    def cbFinished(ignored):
-        print("Finishing job", seq_record.id)
-    d.addCallback(cbFinished)
-    return d
+    res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
+    return res
 
 
 def generate_jobs(output_filename, fasta_file, db):
-    """Uses Twisted."""
-    sem = DeferredSemaphore(50)
-    jobs = []
-
+    print(f"Reading sequences from {output_filename}")
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
-        jobs.append(sem.run(async, seq_record, db, output_filename))
+        print(f"* Reading seq {seq_record.name}")
+        response = id_engine(seq_record, db, output_filename)
+        seq_record_identifications = parse_id_engine_xml(response.text)
+        generate_output_content(seq_record_identifications, output_filename, seq_record)
 
-    d = gatherResults(jobs)
-    d.addCallback(lambda ignored: reactor.stop())
-    reactor.run()
-    print("Processed all sequences.")
-    return "Processed all sequences."
 
 
 def get_args(args) -> Tuple[str, str]:
+    input_filename = args.fasta_file
     bold_database = args.db
-    output_filename = args.fasta_file
-    return output_filename, bold_database
+    return input_filename, bold_database
 
 
 def get_started(args):
-    output_filename, bold_database = get_args(args)
-    output_filename = create_output_file(output_filename)
-    generate_jobs(output_filename, output_filename, bold_database)
+    input_filename, bold_database = get_args(args)
+    output_filename = create_output_file(input_filename)
+    generate_jobs(output_filename, input_filename, bold_database)
 
 
 def create_parser():
