@@ -67,9 +67,7 @@ def async(seq_record, db, output_filename):
 
 
 def generate_jobs(output_filename, fasta_file, db):
-    """
-    Use Twisted.
-    """
+    """Use Twisted."""
     sem = DeferredSemaphore(50)
     jobs = []
     append = jobs.append

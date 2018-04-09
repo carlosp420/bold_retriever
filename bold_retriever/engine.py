@@ -128,8 +128,7 @@ def get_tax_id_from_web(obj):
 
 
 def get_family_name_for_taxon(tax_id):
-    """Send genus name and get family name from the `parentname` result form
-    the API."""
+    """Send genus name and get family name from the `parentname` result form the API."""
     taxon = tax_id.split(" ")[0]
     if taxon.endswith("dae"):
         # This is already a family name
@@ -191,12 +190,12 @@ def process_classification(obj):
 
 
 def get(url, payload):
-    """Wrapper function for requests.get so we can use fake requests when
-    writing unittests.
+    """Wrapper function for requests.get so we can mock requests in tests.
 
     :param url:
     :param params: payload
     :return: response object from requests.get
+
     """
     r = requests.get(url, params=payload)
     return r
