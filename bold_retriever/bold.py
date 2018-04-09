@@ -1,6 +1,6 @@
 import argparse
 from argparse import RawTextHelpFormatter
-import codecs
+from typing import Tuple
 import urllib
 
 from Bio import SeqIO
@@ -12,15 +12,14 @@ from twisted.web.http_headers import Headers
 from bold_retriever import engine
 
 
-def create_output_file(f):
+def create_output_file(output_filename: str) -> str:
     """Containing only column headers of the CSV file."""
     output = "seq_id,bold_id,similarity,division,class,order,family,species,"
     output += "collection_country\n"
 
-    output_filename = f.strip() + "_output.csv"
-    myfile = codecs.open(output_filename, "w", "utf-8")
-    myfile.write(output)
-    myfile.close()
+    output_filename = output_filename.strip() + "_output.csv"
+    with open(output_filename, "w") as handle:
+        handle.write(output)
     return output_filename
 
 
@@ -81,16 +80,16 @@ def generate_jobs(output_filename, fasta_file, db):
     return "Processed all sequences."
 
 
-def get_args(args):
-    db = args.db
-    f = args.fasta_file
-    return f, db
+def get_args(args) -> Tuple[str, str]:
+    bold_database = args.db
+    output_filename = args.fasta_file
+    return output_filename, bold_database
 
 
 def get_started(args):
-    fasta_file, db = get_args(args)
-    output_filename = create_output_file(fasta_file)
-    generate_jobs(output_filename, fasta_file, db)
+    output_filename, bold_database = get_args(args)
+    output_filename = create_output_file(output_filename)
+    generate_jobs(output_filename, output_filename, bold_database)
 
 
 def create_parser():
