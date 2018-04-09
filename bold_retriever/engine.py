@@ -203,7 +203,7 @@ def process_classification(obj):
     return out
 
 
-def get(url, payload):
+def get(url: str, payload: dict):
     """Wrapper function for requests.get so we can mock requests in tests.
 
     :param url:
@@ -211,8 +211,7 @@ def get(url, payload):
     :return: response object from requests.get
 
     """
-    r = requests.get(url, params=payload)
-    return r
+    return requests.get(url, params=payload)
 
 
 def generate_output_content(all_ids, output_filename, seq_record):

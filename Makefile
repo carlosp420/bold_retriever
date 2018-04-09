@@ -41,7 +41,7 @@ test-all:
 	tox
 
 coverage: clean-test
-	coverage run --source=bold_retriever `which trial` tests/
+	coverage run --source=bold_retriever setup.py test
 	coverage report
 	coverage html
 
