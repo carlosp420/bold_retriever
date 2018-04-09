@@ -53,6 +53,13 @@ Speed
 **bold_retriever** uses the library Twisted for performing asynchronous calls.
 This speeds up the total processing time.
 
+Citation
+--------
+The citation should be our MolEco paper:
+
+Vesterinen, E. J., Ruokolainen, L., Wahlberg, N., Peña, C., Roslin, T., Laine, V. N., Vasko, V., Sääksjärvi, I. E., Norrdahl, K., and Lilley, T. M. (2016) What you need is what you eat? Prey selection by the bat Myotis daubentonii. Molecular Ecology, 25(7), 1581–1594. doi:10.1111/mec.13564
+
+
 Full documentation
 ------------------
 See the full documentation at http://bold-retriever.readthedocs.org
