@@ -4,7 +4,7 @@ import subprocess
 import unittest
 from twisted.internet import reactor, task
 
-from bold_retriever import bold as br
+from bold_retriever import bold_retriever as br
 
 
 class CmdlineTest(unittest.TestCase):
@@ -27,17 +27,6 @@ class CmdlineTest(unittest.TestCase):
         args = self.parser.parse_args(['-f', 'ionx23b.fas', '-db', 'COX1'])
         expected = 'COX1'
         self.assertEqual(expected, args.db)
-
-    def test_cmdline_main(self):
-        cwd = os.path.abspath(os.path.dirname(__file__))
-        bold_retriever = os.path.join(cwd, '..', 'bold_retriever',
-                                      'bold_retriever.py')
-        print(bold_retriever)
-        cmd = "python " + bold_retriever + " -f " + os.path.join(cwd,
-                                                                 'otu99.fas')
-        cmd += " -db COX1_SPECIES"
-        p = subprocess.check_call(cmd, shell=True)
-        self.assertEqual(0, p)
 
     def test_get_args(self):
         args = self.parser.parse_args(['-f', 'ionx13.fas', '-db', 'COX1'])

@@ -1,14 +1,16 @@
 import codecs
 import os
+import sys
 import unittest
 from unittest.mock import patch, MagicMock
 
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from bold_retriever import bold as br
+from bold_retriever import bold_retriever as br
 from bold_retriever import engine
 
+#sys.path.append("../bold_retriever")
 
 TEST_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
                               "Bold_Retriever")
@@ -163,46 +165,6 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "None,None,None"
         result = engine.process_classification(obj)
         self.assertEqual(expected, result)
-
-    @patch()
-    def test_generate_output_content(self):
-        output_filename = 'ionx13.fas_output.csv'
-        seq = Seq("AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTC"
-                  "AACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCA"
-                  "TTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA")
-        seq_record = SeqRecord(seq)
-        seq_record.id = 'ionx13'
-
-        if os.path.isfile(output_filename):
-            os.remove(output_filename)
-        engine.generate_output_content(
-            [{'seq': 'AATTTGAGCTGGTATACTTGGGACTAGTTTAAGAATCTTAATTCGACTTGAGTTAGGCCAACCAGGTTTATTtttAGAAGATGACCAAACATATAATGTTATCGTTACCGCTCACGCTTTTATTATAATTttttttATAGTAATACCAATATA',
-              'similarity': '1',
-              'collection_country': 'Canada',
-              'bold_id': 'SIOCA145-10',
-              'id': 'ionx13',
-              'tax_id': 'Psocoptera'}],
-            output_filename,
-            seq_record,
-        )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
-        expected = "ionx13,SIOCA145-10,1,animal,Insecta,Psocoptera,Peripsocidae,Peripsocus subfasciatus,Canada"
-        self.assertEqual(expected, result.strip())
-
-    def test_get_tax_id_from_web(self):
-        obj = {'division': 'animal',
-               'classification': 'true',
-               'seq': 'AATTTGATCAGGTTTAGTAGGAACTAGATTAAGTTTATTAATTCGAGCCGAATTAGGTCAACCAGGTTCATTAATTGGAGATGACCAAATTTATAATGTAATCGTAACTGCTCATGCATTTATTATAATTTTCTTCATAGTTATACCTATTGTTATTGGA',
-               'similarity': '1',
-               'class': u'Insecta',
-               'collection_country': 'Finland',
-               'taxID': u'107',
-               'bold_id': 'NEUFI079-11',
-               'order': u'Neuroptera',
-               'id': 'OTU_99',
-               'tax_id': 'Neuroptera'}
-        results = engine.get_tax_id_from_web(obj)
-        self.assertEqual('Hemerobius pini', results['tax_id'])
 
 
 if __name__ == "__main__":

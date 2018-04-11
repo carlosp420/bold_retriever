@@ -10,7 +10,7 @@ from twisted.web.client import Agent, readBody
 from twisted.internet import reactor, threads
 from twisted.web.http_headers import Headers
 
-from engine import parse_id_engine_xml, generate_output_content
+from bold_retriever.engine import parse_id_engine_xml, generate_output_content
 
 
 def create_output_file(input_filename: str) -> str:
