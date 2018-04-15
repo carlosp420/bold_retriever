@@ -4,7 +4,7 @@ import subprocess
 import unittest
 from twisted.internet import reactor, task
 
-from bold_retriever import bold_retriever as br
+import bold_retriever as br
 
 
 class CmdlineTest(unittest.TestCase):

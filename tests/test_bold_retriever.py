@@ -8,8 +8,8 @@ from unittest.mock import patch, MagicMock
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-from bold_retriever import bold_retriever as br
-from bold_retriever import engine
+import bold_retriever as br
+import engine
 
 
 TEST_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),

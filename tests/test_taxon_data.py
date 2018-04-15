@@ -1,6 +1,6 @@
 import unittest
 
-from bold_retriever import engine
+import engine
 
 
 class TestBoldRetriever(unittest.TestCase):

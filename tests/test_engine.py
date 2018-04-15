@@ -1,7 +1,7 @@
 from twisted.trial import unittest
 from twisted.web.error import Error
 
-from bold_retriever import engine
+import engine
 
 
 class TestEngine(unittest.TestCase):
@@ -128,3 +128,10 @@ class TestEngine(unittest.TestCase):
         expected = "None,None,None"
         result = engine.process_classification(obj)
         self.assertEqual(expected, result)
+
+    def test_parse_id_engine_xml(self):
+        with open("tests/Data/id_engine.xml", "r") as handle:
+            data = handle.read()
+        result = engine.parse_id_engine_xml(data)
+        self.assertIn("SAMOS029-09", result[0]["ID"])
+        self.assertEqual("COI-5P", result[0]["sequencedescription"])

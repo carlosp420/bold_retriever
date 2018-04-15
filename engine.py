@@ -3,6 +3,7 @@ import csv
 import json
 import logging
 import re
+from typing import List, Dict
 import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
@@ -261,7 +262,7 @@ def parse_bold_xml(request, seq_object, id, all_ids, taxon_list):
         return all_ids, taxon_list
 
 
-def parse_id_engine_xml(xml):
+def parse_id_engine_xml(xml: str) -> List[Dict[str, str]]:
     try:
         root = ET.fromstring(xml)
     except ET.ParseError as error:

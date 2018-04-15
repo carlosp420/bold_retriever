@@ -1,7 +1,7 @@
 import unittest
 from twisted.internet import reactor
 
-from bold_retriever import engine
+import engine
 
 
 class TestBoldRetriever(unittest.TestCase):

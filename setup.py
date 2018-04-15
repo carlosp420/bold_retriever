@@ -4,7 +4,7 @@ try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-
+from setuptools import find_packages, setup
 
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
@@ -19,11 +19,7 @@ setup(
     author_email='mycalesis@gmail.com',
     maintainer='Carlos Pena',
     url='https://github.com/carlosp420/bold_retriever',
-    packages=[
-        'bold_retriever',
-    ],
-    package_dir={'bold_retriever':
-                 'bold_retriever'},
+    packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     license="GPL v3",
     zip_safe=False,
