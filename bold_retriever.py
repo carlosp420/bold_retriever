@@ -37,11 +37,15 @@ def create_output_file(input_filename: str) -> str:
 
 def generate_jobs(output_filename: str, fasta_file: str, db: str):
     print(f"Reading sequences from {output_filename}")
+
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
         print(f"* Reading seq {seq_record.name}")
         response = id_engine(seq_record, db, output_filename)
         seq_record_identifications = parse_id_engine_xml(response.text)
-        print(seq_record_identifications)
+
+        # add our seq id to the list of identifications
+        for seq_record_identification in seq_record_identifications:
+            seq_record_identification["seq_id"] = seq_record.id
         generate_output_content(seq_record_identifications, output_filename, seq_record)
 
 

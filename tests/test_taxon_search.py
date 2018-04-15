@@ -12,12 +12,12 @@ class TestBoldRetriever(unittest.TestCase):
     def test_taxon_search1(self):
         obj = {'tax_id': 'Ormosia'}
         results = engine.taxon_search(obj)
-        self.assertEqual(results['division'], 'animal')
+        self.assertEqual(results['division'], 'not animal')
 
     def test_taxon_search2(self):
         obj = {'tax_id': 'Ormosia'}
         results = engine.taxon_search(obj)
-        self.assertEqual(results['taxID'], '297370')
+        self.assertEqual(results['taxID'], '223577')
 
     def test_taxon_search3(self):
         # when it is not an animal
