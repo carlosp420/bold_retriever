@@ -5,6 +5,7 @@ dist
 *csv
 .idea
 *.py[cod]
+.mypy_cache
 _trial_temp*
 tests_eero
 benchmarks.R
