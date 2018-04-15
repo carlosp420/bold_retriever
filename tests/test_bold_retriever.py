@@ -1,6 +1,9 @@
 import codecs
 import os
 import unittest
+import sys
+import unittest
+from unittest.mock import patch, MagicMock
 
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
