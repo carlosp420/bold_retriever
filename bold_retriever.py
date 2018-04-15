@@ -35,7 +35,7 @@ def create_output_file(input_filename: str) -> str:
     return output_filename
 
 
-def generate_jobs(output_filename, fasta_file, db):
+def generate_jobs(output_filename: str, fasta_file: str, db: str):
     print(f"Reading sequences from {output_filename}")
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
         print(f"* Reading seq {seq_record.name}")

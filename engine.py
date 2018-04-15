@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 
 from bs4 import BeautifulSoup
 import requests
+from Bio.SeqIO import SeqRecord
 
 
 def taxon_search(obj):
@@ -216,7 +217,8 @@ def get(url: str, payload: dict):
     return requests.get(url, params=payload)
 
 
-def generate_output_content(all_ids, output_filename, seq_record):
+def generate_output_content(all_ids: List[Dict[str, str]], output_filename: str,
+                            seq_record: SeqRecord):
     if all_ids:
         headers = all_ids[0].keys()
         with open(output_filename, "w") as handle:

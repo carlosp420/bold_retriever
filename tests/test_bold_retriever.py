@@ -179,7 +179,7 @@ class TestBoldRetriever(unittest.TestCase):
             output_filename,
             seq_record,
         )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[0]
+        result = codecs.open(output_filename, "r", "utf-8").readlines()[1]
         expected = "ionx13,SIOCA145-10,1,animal,Insecta,Psocoptera,Peripsocidae,Peripsocus subfasciatus,Canada"
         self.assertEqual(expected, result.strip())
 
