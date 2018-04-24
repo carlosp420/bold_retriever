@@ -220,11 +220,13 @@ def get(url: str, payload: dict):
 def generate_output_content(all_ids: List[Dict[str, str]], output_filename: str,
                             seq_record: SeqRecord):
     if all_ids:
-        headers = all_ids[0].keys()
+        headers = list(all_ids[0].keys())
+        headers.remove("id")
         with open(output_filename, "w") as handle:
             csv_writer = csv.DictWriter(handle, fieldnames=headers)
             csv_writer.writeheader()
             for item in all_ids:
+                del item["id"]
                 csv_writer.writerow(item)
     else:
         out = "nohit," + str(seq_record.id) + ","

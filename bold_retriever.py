@@ -1,9 +1,17 @@
-from Bio import SeqIO
-import click
-import requests
+from datetime import datetime, timedelta
+from typing import Dict, Optional
 from urllib.parse import urlencode
 
+from Bio import SeqIO
+import click
+import dataset
+import requests
+
 from engine import generate_output_content, parse_id_engine_xml
+
+
+DATABASE_URL = "sqlite:///bold.sqlite"
+DB = dataset.connect(DATABASE_URL)
 
 
 @click.command()
@@ -36,7 +44,7 @@ def create_output_file(input_filename: str) -> str:
 
 
 def generate_jobs(output_filename: str, fasta_file: str, db: str):
-    print(f"Reading sequences from {output_filename}")
+    print(f"Reading sequences from {fasta_file}")
 
     for seq_record in SeqIO.parse(fasta_file, "fasta"):
         print(f"* Reading seq {seq_record.name}")
@@ -46,6 +54,8 @@ def generate_jobs(output_filename: str, fasta_file: str, db: str):
         # add our seq id to the list of identifications
         for seq_record_identification in seq_record_identifications:
             seq_record_identification["seq_id"] = seq_record.id
+            taxonomy = get_taxonomy(seq_record_identification)
+            seq_record_identification.update(taxonomy)
         generate_output_content(seq_record_identifications, output_filename, seq_record)
 
 
@@ -59,6 +69,66 @@ def id_engine(seq_record, db, output_filename):
 
     res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
     return res
+
+
+def get_taxonomy(seq_record: Dict[str, str]) -> Optional[Dict[str, str]]:
+    tax_id = get_tax_id(seq_record)
+    if tax_id:
+        taxonomy = get_higher_level_taxonomy(tax_id)
+        return taxonomy
+
+
+def get_tax_id(seq_record: Dict[str, str]):
+    tax_id = get_tax_id_from_db(seq_record)
+    if tax_id:
+        return tax_id
+
+    domain = "http://boldsystems.org/index.php/API_Tax/TaxonSearch?taxName="
+    url = domain + seq_record["taxonomicidentification"]
+    res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
+    response_json = res.json()
+    try:
+        tax_id = response_json["top_matched_names"][0]["taxid"]
+    except (KeyError, IndexError):
+        tax_id = None
+
+    if tax_id:
+        table = DB["tax_ids"]
+        data = {
+            "taxon": seq_record["taxonomicidentification"],
+            "tax_id": tax_id,
+        }
+        table.insert(data)
+    return tax_id
+
+
+def get_tax_id_from_db(seq_record: Dict[str, str]) -> Optional[str]:
+    table = DB["tax_ids"]
+    element = table.find_one(taxon=seq_record["taxonomicidentification"])
+    if element:
+        return element["tax_id"]
+
+
+def get_higher_level_taxonomy(tax_id):
+    table = DB["taxonomy"]
+    element = table.find_one(tax_id=tax_id)
+    if element:
+        return element
+
+    url = f"http://boldsystems.org/index.php/API_Tax/TaxonData?taxId={tax_id}&dataTypes=basic&includeTree=true"
+    res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
+    response_json = res.json()
+    taxonomy = dict()
+
+    for id in response_json.keys():
+        category = response_json[id]
+        value = category["taxon"]
+        key = category["tax_rank"]
+        taxonomy[key] = value
+
+    taxonomy["tax_id"] = tax_id
+    table.insert(taxonomy)
+    return taxonomy
 
 
 if __name__ == '__main__':
