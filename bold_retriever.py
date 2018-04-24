@@ -113,6 +113,7 @@ def get_higher_level_taxonomy(tax_id):
     table = DB["taxonomy"]
     element = table.find_one(tax_id=tax_id)
     if element:
+        del element["id"]
         return element
 
     url = f"http://boldsystems.org/index.php/API_Tax/TaxonData?taxId={tax_id}&dataTypes=basic&includeTree=true"
