@@ -19,7 +19,10 @@ def generate_output_content(all_ids: List[Dict[str, str]], output_filename: str,
         with open(output_filename, "a") as handle:
             csv_writer = csv.DictWriter(handle, fieldnames=HEADERS)
             for item in all_ids:
-                del item["seq_record"]
+                try:
+                    del item["seq_record"]
+                except KeyError:
+                    pass
                 csv_writer.writerow(item)
     else:
         out = {"OtuID": seq_record.id}
