@@ -1,4 +1,3 @@
-import codecs
 import csv
 from typing import List, Dict
 import xml.etree.ElementTree as ET

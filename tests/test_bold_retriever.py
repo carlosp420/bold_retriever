@@ -1,4 +1,3 @@
-import codecs
 import os
 import json
 import unittest
@@ -7,7 +6,7 @@ from unittest.mock import patch
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
-import bold_retriever as br
+from bold_retriever import create_output_file, get_bin
 import engine
 
 
@@ -26,11 +25,11 @@ class TestBoldRetriever(unittest.TestCase):
             data = handle.read()
 
             mock_get.return_value.json.return_value = json.loads(data)
-            result = br.get_bin("some taxon id")
+            result = get_bin("some taxon id")
             self.assertEqual("BOLD:AAA3750", result)
 
     def test_create_output_file(self):
-        result = br.create_output_file("my_fasta_file.fas")
+        result = create_output_file("my_fasta_file.fas")
         expected = "my_fasta_file.fas_output.csv"
         self.assertEqual(result, expected)
 
@@ -38,7 +37,7 @@ class TestBoldRetriever(unittest.TestCase):
         expected = "my_fasta_file.fas_output.csv"
         if os.path.isfile(expected):
             os.remove(expected)
-        br.create_output_file("my_fasta_file.fas")
+        create_output_file("my_fasta_file.fas")
         self.assertTrue(os.path.isfile(expected))
 
     def test_generate_output_content(self):
@@ -64,7 +63,3 @@ class TestBoldRetriever(unittest.TestCase):
             if os.path.isfile(filename):
                 os.remove(filename)
 
-
-if __name__ == "__main__":
-    runner = unittest.TextTestRunner(verbosity=2)
-    unittest.main(testRunner=runner)

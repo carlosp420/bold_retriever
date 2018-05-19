@@ -1,11 +1,11 @@
 import asyncio
+import argparse
 import csv
 import json
 from typing import Dict, Optional
 from urllib.parse import urlencode
 
 from Bio import SeqIO
-import click
 import dataset
 import requests
 
@@ -14,23 +14,6 @@ from engine import generate_output_content, parse_id_engine_xml, HEADERS
 
 DATABASE_URL = "sqlite:///bold.sqlite"
 DB = dataset.connect(DATABASE_URL)
-
-
-@click.command()
-@click.option('-f', '--filename', type=str, help='Fasta filename', required=True)
-@click.option('-db',
-              '--database',
-              type=click.Choice([
-                  'COX1_SPECIES', 'COX1', 'COX1_SPECIES_PUBLIC', 'COX1_L640bp',
-              ]),
-              help='Choose a BOLD database. Enter one option.',
-              required=True,
-              )
-def bold(filename, database):
-    "Send seqs to BOLD Systems API and retrieve results"
-    click.echo(filename +  " "  +  database)
-    output_filename = create_output_file(filename)
-    generate_jobs(output_filename, filename, database)
 
 
 def create_output_file(input_filename: str) -> str:
@@ -42,26 +25,22 @@ def create_output_file(input_filename: str) -> str:
     return output_filename
 
 
-def generate_jobs(output_filename: str, fasta_file: str, db: str):
-    print(f"Reading sequences from {fasta_file}")
-
-    for seq_record in SeqIO.parse(fasta_file, "fasta"):
-        print(f"* Reading seq {seq_record.name}")
-        response = id_engine(seq_record, db, output_filename)
-        seq_record_identifications = parse_id_engine_xml(response.text)
-
-        # add our seq id to the list of identifications
-        for seq_record_identification in seq_record_identifications:
-            seq_record_identification["OtuID"] = seq_record.id
-            taxonomy = get_taxonomy(seq_record_identification)
-            try:
-                bin = get_bin([seq_record_identification["ID"]])
-            except KeyError:
-                bin = ""
-            seq_record_identification["BIN"] = bin
-            seq_record_identification.update(taxonomy)
-            seq_record_identification["seq_record"] = seq_record
-        generate_output_content(seq_record_identifications, output_filename, seq_record)
+async def execute_one_record(db, output_filename, seq_record):
+    print(f"* Reading seq {seq_record.name}")
+    response = id_engine(seq_record, db, output_filename)
+    seq_record_identifications = parse_id_engine_xml(response.text)
+    # add our seq id to the list of identifications
+    for seq_record_identification in seq_record_identifications:
+        seq_record_identification["OtuID"] = seq_record.id
+        taxonomy = get_taxonomy(seq_record_identification)
+        try:
+            bin = get_bin([seq_record_identification["ID"]])
+        except KeyError:
+            bin = ""
+        seq_record_identification["BIN"] = bin
+        seq_record_identification.update(taxonomy)
+        seq_record_identification["seq_record"] = seq_record
+    generate_output_content(seq_record_identifications, output_filename, seq_record)
 
 
 def id_engine(seq_record, db, output_filename):
@@ -121,7 +100,8 @@ def get_higher_level_taxonomy(tax_id):
         del element["id"]
         return element
 
-    url = f"http://boldsystems.org/index.php/API_Tax/TaxonData?taxId={tax_id}&dataTypes=basic&includeTree=true"
+    url = f"http://boldsystems.org/index.php/API_Tax/TaxonData?taxId={tax_id}" \
+          "&dataTypes=basic&includeTree=true"
     res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
     response_json = res.json()
     taxonomy = dict()
@@ -168,5 +148,31 @@ def get_bin(ids):
     return bin
 
 
-if __name__ == '__main__':
-    bold()
+async def main():
+    if __name__ == "__main__":
+        parser = argparse.ArgumentParser(description="bold_retriever")
+        parser.add_argument('-f', '--filename', type=str, help='Fasta filename', required=True)
+        parser.add_argument(
+            '-db',
+            '--database',
+            choices=['COX1_SPECIES', 'COX1', 'COX1_SPECIES_PUBLIC', 'COX1_L640bp'],
+            help='Choose a BOLD database. Enter one option.',
+            required=True,
+        )
+        args = parser.parse_args()
+
+        # Send seqs to BOLD Systems API and retrieve results
+        fasta_file = args.filename
+        db = args.database
+        output_filename = create_output_file(fasta_file)
+        print(f"Reading sequences from {fasta_file}")
+
+        tasks = []
+        for seq_record in SeqIO.parse(fasta_file, "fasta"):
+            tasks.append(asyncio.ensure_future(execute_one_record(db, output_filename, seq_record)))
+        await asyncio.gather(*tasks)
+
+
+loop = asyncio.get_event_loop()
+loop.run_until_complete(main())
+loop.close()

@@ -1,5 +1,4 @@
-from twisted.trial import unittest
-from twisted.web.error import Error
+import unittest
 
 import engine
 
