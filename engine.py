@@ -6,20 +6,29 @@ import xml.etree.ElementTree as ET
 from Bio.SeqIO import SeqRecord
 
 
+HEADERS = [
+    "ID", "OtuID", "BIN", "tax_id", "sequencedescription", "database", "citation",
+    "taxonomicidentification", "similarity", "url", "country", "lat", "lon",
+    "phylum", "class", "order", "family", "subfamily", "tribe", "genus", "species",
+]
+
+
 def generate_output_content(all_ids: List[Dict[str, str]], output_filename: str,
                             seq_record: SeqRecord):
     if all_ids:
-        headers = all_ids[0].keys()
-        with open(output_filename, "w") as handle:
-            csv_writer = csv.DictWriter(handle, fieldnames=headers)
-            csv_writer.writeheader()
+        with open(output_filename, "a") as handle:
+            csv_writer = csv.DictWriter(handle, fieldnames=HEADERS)
             for item in all_ids:
+                del item["seq_record"]
                 csv_writer.writerow(item)
     else:
-        out = "nohit," + str(seq_record.id) + ","
-        out += "nohit,nohit,nohit,nohit,nohit,nohit,nohit\n"
-        with codecs.open(output_filename, "a", "utf-8") as handle:
-            handle.write(out)
+        out = {"OtuID": seq_record.id}
+        for header in HEADERS:
+            if header not in out:
+                out[header] = "nohit"
+        with open(output_filename, "a") as handle:
+            csv_writer = csv.DictWriter(handle, fieldnames=HEADERS)
+            csv_writer.writerow(out)
 
 
 def parse_id_engine_xml(xml: str) -> List[Dict[str, str]]:

@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+import asyncio
+import csv
 import json
 from typing import Dict, Optional
 from urllib.parse import urlencode
@@ -8,7 +9,7 @@ import click
 import dataset
 import requests
 
-from engine import generate_output_content, parse_id_engine_xml
+from engine import generate_output_content, parse_id_engine_xml, HEADERS
 
 
 DATABASE_URL = "sqlite:///bold.sqlite"
@@ -34,13 +35,10 @@ def bold(filename, database):
 
 def create_output_file(input_filename: str) -> str:
     """Containing only column headers of the CSV file."""
-    output = "id,bold_id,sequencedescription,database,citation,taxonomicidentification,similarity,url,country,lat,lon,class,order,family,species,"
-    output += "collection_country\n"
-
     output_filename = input_filename.strip() + "_output.csv"
-    print(f"Creating output file {output_filename}")
     with open(output_filename, "w") as handle:
-        handle.write(output)
+        csv_writer = csv.DictWriter(handle, fieldnames=HEADERS)
+        csv_writer.writeheader()
     return output_filename
 
 
@@ -62,6 +60,7 @@ def generate_jobs(output_filename: str, fasta_file: str, db: str):
                 bin = ""
             seq_record_identification["BIN"] = bin
             seq_record_identification.update(taxonomy)
+            seq_record_identification["seq_record"] = seq_record
         generate_output_content(seq_record_identifications, output_filename, seq_record)
 
 
