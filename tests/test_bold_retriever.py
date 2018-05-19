@@ -2,6 +2,7 @@ import codecs
 import os
 import unittest
 import sys
+import json
 import unittest
 from unittest.mock import patch, MagicMock
 
@@ -13,13 +14,22 @@ import engine
 
 
 TEST_FILE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)),
-                              "Bold_Retriever")
+                              "Data")
 
 
 class TestBoldRetriever(unittest.TestCase):
 
     def setUp(self):
         self.db = "COX1_L640bp"
+
+    @patch("bold_retriever.requests.get")
+    def test_get_bin(self, mock_get):
+        with open(os.path.join(TEST_FILE_PATH, "bin.json"), "r") as handle:
+            data = handle.read()
+
+            mock_get.return_value.json.return_value = json.loads(data)
+            result = br.get_bin("some taxon id")
+            self.assertEqual("BOLD:AAA3750", result)
 
     def test_parse_bold_xml1(self):
         with open(os.path.join(TEST_FILE_PATH, "response1.xml"), "r") as handle:
@@ -198,11 +208,6 @@ class TestBoldRetriever(unittest.TestCase):
                'tax_id': 'Neuroptera'}
         results = engine.get_tax_id_from_web(obj)
         self.assertEqual('Neuroptera', results['tax_id'])
-
-    def test_get_bin(self):
-        bins = ["SAMOS029-09"]
-        result = br.get_bin(bins)
-        self.assertEqual("", result)
 
 
 if __name__ == "__main__":

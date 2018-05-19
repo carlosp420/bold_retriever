@@ -1,0 +1,93 @@
+{
+  "bold_records": {
+    "records": {
+      "SAMOS029-09": {
+        "record_id": "995053",
+        "processid": "SAMOS029-09",
+        "bin_uri": "BOLD:AAA3750",
+        "specimen_identifiers": {
+          "sampleid": "ACT-CM07-13",
+          "fieldnum": "CM07-13",
+          "institution_storing": "Centre for Biodiversity Genomics"
+        },
+        "taxonomy": {
+          "identification_provided_by": "BOLD ID Engine",
+          "phylum": {
+            "taxon": {
+              "taxID": "20",
+              "name": "Arthropoda"
+            }
+          },
+          "class": {
+            "taxon": {
+              "taxID": "82",
+              "name": "Insecta"
+            }
+          },
+          "order": {
+            "taxon": {
+              "taxID": "127",
+              "name": "Diptera"
+            }
+          },
+          "family": {
+            "taxon": {
+              "taxID": "1730",
+              "name": "Culicidae"
+            }
+          },
+          "subfamily": {
+            "taxon": {
+              "taxID": "2142",
+              "name": "Culicinae"
+            }
+          },
+          "genus": {
+            "taxon": {
+              "taxID": "6438",
+              "name": "Aedes"
+            }
+          },
+          "species": {
+            "taxon": {
+              "taxID": "194578",
+              "name": "Aedes nigripes",
+              "reference": "Zetterstedt, 1838"
+            }
+          }
+        },
+        "collection_event": {
+          "collectors": "A.Thielman",
+          "site_code": "BIOUG:Churchill",
+          "country": "Canada",
+          "province_state": "Manitoba",
+          "region": "Churchill",
+          "sector": "18 km E Churchill, Halfway Point",
+          "coordinates": {
+            "lat": "58.772",
+            "lon": "-93.843",
+            "coord_source": "",
+            "coord_accuracy": ""
+          }
+        },
+        "specimen_imagery": {
+          "media": [
+            {
+              "mediaID": 378448,
+              "media_descriptor": "Lateral",
+              "copyright": {
+                "copyright_holder": "CBG Photography Group",
+                "copyright_year": "2009",
+                "copyright_license": "CreativeCommons - Attribution Non-Commercial Share-Alike",
+                "copyright_institution": "Centre for Biodiversity Genomics"
+              },
+              "photographer": "Jaclyn McCormick",
+              "image_file": "http://www.boldsystems.org/pics/SAMOS/IMG_0421+1233169430.JPG"
+            }
+          ]
+        },
+        "notes": "<![CDATA[::taxonomy:Based on BIN cluster examined by P. Schaefer::endTaxonomy:<VERBATIM LOCALITY>near Halfway Point||58.7715|-93.8431|</VERBATIM LOCALITY>]]>"
+      }
+    }
+  }
+}

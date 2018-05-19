@@ -56,6 +56,11 @@ def generate_jobs(output_filename: str, fasta_file: str, db: str):
         for seq_record_identification in seq_record_identifications:
             seq_record_identification["OtuID"] = seq_record.id
             taxonomy = get_taxonomy(seq_record_identification)
+            try:
+                bin = get_bin([seq_record_identification["ID"]])
+            except KeyError:
+                bin = ""
+            seq_record_identification["BIN"] = bin
             seq_record_identification.update(taxonomy)
         generate_output_content(seq_record_identifications, output_filename, seq_record)
 
@@ -137,9 +142,31 @@ def get_bin(ids):
     ids = "|".join(ids)
     url = f"http://boldsystems.org/index.php/API_Public/specimen?ids={ids}&format=json"
     res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
-    with open("/tmp/a.xml", "w") as handle:
-        handle.write(json.dumps(res.json()))
-    return res.json()
+
+    records = None
+    elements = None
+    bin = None
+
+    try:
+        records = res.json()
+    except json.decoder.JSONDecodeError:
+        pass
+
+    if records:
+        try:
+            elements = records["bold_records"]["records"]
+        except KeyError:
+            pass
+
+    if elements:
+        key = list(elements.keys())[0]
+
+        try:
+            bin = elements[key]["bin_uri"]
+        except KeyError:
+            pass
+
+    return bin
 
 
 if __name__ == '__main__':
