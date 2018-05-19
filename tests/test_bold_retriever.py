@@ -199,6 +199,11 @@ class TestBoldRetriever(unittest.TestCase):
         results = engine.get_tax_id_from_web(obj)
         self.assertEqual('Neuroptera', results['tax_id'])
 
+    def test_get_bin(self):
+        bins = ["SAMOS029-09"]
+        result = br.get_bin(bins)
+        self.assertEqual("", result)
+
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(verbosity=2)

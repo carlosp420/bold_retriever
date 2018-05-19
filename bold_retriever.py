@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import json
 from typing import Dict, Optional
 from urllib.parse import urlencode
 
@@ -130,6 +131,15 @@ def get_higher_level_taxonomy(tax_id):
     taxonomy["tax_id"] = tax_id
     table.insert(taxonomy)
     return taxonomy
+
+
+def get_bin(ids):
+    ids = "|".join(ids)
+    url = f"http://boldsystems.org/index.php/API_Public/specimen?ids={ids}&format=json"
+    res = requests.get(url, headers={'User-Agent': 'bold_retriever'})
+    with open("/tmp/a.xml", "w") as handle:
+        handle.write(json.dumps(res.json()))
+    return res.json()
 
 
 if __name__ == '__main__':
