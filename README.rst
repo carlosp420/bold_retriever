@@ -36,7 +36,7 @@ For example::
 
 * output::
 
-    seq_id  bold_id       similarity  division  class       order       family        species                collection_country
+    OtuID   bold_id       similarity  division  class       order       family        species                collection_country
     OTU_99  FBNE064-11    1           animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius pini        Germany
     OTU_99  NEUFI079-11   1           animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius pini        Finland
     OTU_99  FBNE172-13    0.9937      animal    Insecta     Neuroptera  Hemerobiidae  Hemerobius atrifrons   Germany

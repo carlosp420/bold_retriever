@@ -22,7 +22,7 @@ For example::
 
 The output should look like this::
 
-    seq_id            bold_id        similarity  division  class    order    family         species                      collection_country
+    OtuID             bold_id        similarity  division  class    order    family         species                      collection_country
     TE-14-27_FHYP_av  FIDIP558-11    0.9884      animal    Insecta  Diptera  None           Diptera                      Finland           
     TE-14-27_FHYP_av  GBDP6413-09    0.9242      animal    Insecta  Diptera  Hippoboscidae  Ornithomya anchineura        None              
     TE-14-27_FHYP_av  GBDP2916-07    0.922       animal    Insecta  Diptera  Hippoboscidae  Stenepteryx hirundinis       None              

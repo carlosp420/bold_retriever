@@ -3,12 +3,12 @@
 language: python
 sudo: false
 python:
-  - "2.7"
+  - "3.6"
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -r requirements-test.txt
 
 # command to run tests, e.g. python setup.py test
-script: coverage run --source=bold_retriever `which trial` tests/
+script: coverage run setup.py test
 
 after_success: coveralls
