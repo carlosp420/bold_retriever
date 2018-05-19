@@ -53,7 +53,7 @@ def generate_jobs(output_filename: str, fasta_file: str, db: str):
 
         # add our seq id to the list of identifications
         for seq_record_identification in seq_record_identifications:
-            seq_record_identification["seq_id"] = seq_record.id
+            seq_record_identification["OtuID"] = seq_record.id
             taxonomy = get_taxonomy(seq_record_identification)
             seq_record_identification.update(taxonomy)
         generate_output_content(seq_record_identifications, output_filename, seq_record)
