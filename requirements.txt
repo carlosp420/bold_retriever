@@ -1,7 +1,4 @@
-Twisted==17.9.0
 dataset==1.0.8
-beautifulsoup4==4.6.0
 biopython==1.71
 certifi==2018.1.18
 requests==2.18.4
-click
