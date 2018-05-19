@@ -50,14 +50,13 @@ class TestBoldRetriever(unittest.TestCase):
         if os.path.isfile(output_filename):
             os.remove(output_filename)
         engine.generate_output_content(
-            [{'similarity': '1', 'collection_country': 'Canada', 'bold_id': 'SIOCA145-10', 'id': 'ionx13', 'tax_id': 'Psocoptera'}],
+            [{'seq_record': 'some record', 'similarity': '1', 'tax_id': 'Psocoptera'}],
             output_filename,
             seq_record,
         )
-        result = codecs.open(output_filename, "r", "utf-8").readlines()[1]
-        self.assertIn("ionx13", result.strip())
-        self.assertIn("SIOCA145-10", result.strip())
-        self.assertIn("Canada", result.strip())
+        with open(output_filename, "r") as handle:
+            result = handle.read()
+            self.assertIn("Psocoptera", result)
 
     def tearDown(self):
         files = ["ionx13.fas_output.csv", "my_fasta_file.fas_output.csv"]
