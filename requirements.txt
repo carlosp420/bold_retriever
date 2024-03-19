@@ -1,4 +1,4 @@
 dataset==1.0.8
 biopython==1.71
 certifi==2023.7.22
-requests==2.18.4
+requests==2.20.0
